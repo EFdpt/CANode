@@ -18,7 +18,7 @@ void setup() {
   pinMode(BUZZ,OUTPUT);
   pinMode(BrakeIN,INPUT);
 Serial.begin(115200);
-Can0.begin(1000000,50);//inizializza la porta con 1Mb/s e porta alto il pin 51 quando la porta è abilitata
+Can0.begin(1000000,50);//inizializza la porta con 1Mb/s e porta alto il pin 50 quando la porta è abilitata
 Can1.begin(1000000,51);//inizializza la porta con 1Mb/s e porta alto il pin 51 quando la porta è abilitata
 }
 
