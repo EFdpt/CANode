@@ -13,12 +13,11 @@
 #ifndef CANODEINIT_H_
 #define CANODEINIT_H_
 
-
 /*
  * Definizione nomi schede
  *	board_table[current_board]();
  * */
-typedef enum {PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA} tipoScheda;
+typedef enum {PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG} tipoScheda;
 
 /*
  * @brief: selezione delle funzioni della scheda
@@ -28,7 +27,11 @@ typedef enum {PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA} tipoSched
  * 			PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA
  *
  * */
-void Select_Board(tipoScheda);
+void Init_Board(tipoScheda posizione);
+
+void HSESwitch();
+
+void GPIOInit();
 
 
 #endif /* CANODEINIT_H_ */
