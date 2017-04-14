@@ -17,25 +17,26 @@
  * */
 void Init_Board(tipoScheda posizione){
 
-	/*PVDO: PVD interrupt if VDD is lower than 2.9V*/
-	PWR->CSR |= 0x10;
-
 	/*
 	 * il GPIOA8 viene configurato per uscire il HSE/4 = 6MHz
 	 * 24:26 110 MCO1PRE
-	 * 22:21 10 HSE out*/
+	 * 22:21 10 HSE out
+	 * */
 	RCC->CFGR |= 0x19<<22;
 
 	/*PLS = 2.9V, PVD enabled, HSEON,
 	 * This event can generate an interrupt to the EXTI line16 if enabled through the EXTI registers.
 	 * The PVD output interrupt can be generated when VDD drops below the PVD threshold and/or when VDD
 	 * rises above the PVD threshold depending on EXTI line16 rising/falling edge configuration */
-	PWR->CR |= 0x100F <<4;
+	PWR->CR |= 0x100F0;
 
 
 	switch (posizione){
 
-	//FIXME controllare che siano abilitate le giuste periferiche sulla scheda
+	/* FIXME controllare che siano abilitate le giuste periferiche sulla scheda
+	 * 		controllare abilitazione Interrupt per:
+	 * 			PVD
+	 */
 	case PEDALI:
 		//abilita il clock sui GPIO A/B/C/D
 		RCC->AHB1ENR |= 0xF;
@@ -44,6 +45,7 @@ void Init_Board(tipoScheda posizione){
 		//abilita il clock su ADC1/2/3, TIM1
 		RCC->AHB2ENR |= 0x701;
 
+		//
 
 		break;
 	case CRUSCOTTO:
@@ -139,11 +141,14 @@ void GPIOInit(){
 	 */
 
 	//C
-	GPIOC->AFR[1] |= 0x66600;
-	/*configura SPI 3*/
+	GPIOC->AFR[1] |= 0x66000;
+	/*configura MISO3, MOSI3 ma non SCK3*/
 
-	GPIOC->MODER |= 0x02A55D00;
-	/* configura SPI, SpeedRS, RSelect, HDPLX, EnRs, en22, ADCrd4, dg11, dg21 */
+	//A=1010 → 1000=8
+	GPIOC->MODER |= 0x02855D00;
+	/* configura SPI, SpeedRS, RSelect, HDPLX, EnRs, en22, ADCrd4, dg11, dg21
+	 * SCK3 come IN e non AF */
+
 
 	//GPIOC->OTYPER reset state push-pull
 

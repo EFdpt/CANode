@@ -31,6 +31,7 @@ void Init_Board(tipoScheda posizione);
 
 void HSESwitch();
 
+
 void GPIOInit();
 
 
