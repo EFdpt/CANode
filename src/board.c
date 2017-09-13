@@ -17,7 +17,7 @@ void GPIO_init(GPIO_TypeDef* GPIOx, uint32_t Pin, GPIOMode_TypeDef Mode, GPIOOTy
 	GPIO_Init(GPIOx, &GPIO_InitStructure);
 }
 
-/* questa funzione viene invocata per configurare le funzionalità  della
+/* questa funzione viene invocata per configurare le funzionalitï¿½ della
  * scheda in base al parametro posizione NON VIRGOLETTATO che deve essere
  * uno tra: PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG
  *
@@ -119,11 +119,10 @@ void Init_Board(){
 		//TODO ADC INIT
 		/* ADC configuration */
 		//ADC_Config();
-#endif
 
 //		break;
 //	case CRUSCOTTO:
-#ifdef _CRUSCOTTO
+#elif defined _CRUSCOTTO
 
 		//TODO cruscotto Init
 		/* 1x AIR button - D
@@ -194,13 +193,12 @@ void Init_Board(){
 		//TODO ADC INIT
 		/* ADC configuration */
 		ADC_Config();
-#endif
 
 
 //		break;
 //	case FR_DX:
 
-#ifdef _FR_DX
+#elif defined _FR_DX
 		//TODO fr_dx ADC Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -247,11 +245,10 @@ void Init_Board(){
 
 		CAN_init(FR_DX);
 		//TODO ADC Init
-#endif
 
 //		break;
 //	case FR_SX:
-#ifdef _FR_SX
+#elif defined _FR_SX
 		//TODO fr_sx Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -301,11 +298,10 @@ void Init_Board(){
 
 		CAN_init(FR_SX);
 		//TODO ADC Init
-#endif
 
 //		break;
 //	case RT_DX:
-#ifdef _RT_DX
+#elif defined _RT_DX
 		//TODO rt_dx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -346,11 +342,10 @@ void Init_Board(){
 
 		CAN_init(RT_DX);
 		//TODO ADC Init
-#endif
 
 //		break;
 //	case RT_SX:
-#ifdef _RT_SX
+#elif defined _RT_SX
 		//TODO rt_sx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -391,11 +386,10 @@ void Init_Board(){
 
 		CAN_init(RT_SX);
 		//TODO ADC Init
-#endif
 
 //		break;
 //	case BATTERIA:
-#ifdef _BATTERIA
+#elif defined _BATTERIA
 		//TODO batteria Init
 
 		GPIO_init(GPIOA, tempRD, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
@@ -411,7 +405,7 @@ void Init_Board(){
 		GPIO_init(GPIOB, LSfet, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_Speed_50MHz, GPIO_PuPd_NOPULL);
 
 		/* il fet di abilitazione dell'uscita5V-22
-		 * è pilotato con un PullUp
+		 * ï¿½ pilotato con un PullUp
 		 * */
 		GPIO_init(GPIOC, dg11, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
 
@@ -424,6 +418,8 @@ void Init_Board(){
 		CAN_init(BATTERIA);
 		//TODO I2C_init() func
 		//		I2C_init();
+#else
+	#error "No board specified"
 #endif
 
 //		break;
