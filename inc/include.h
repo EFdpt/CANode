@@ -17,8 +17,6 @@
 #include "inverter.h"
 #include "board.h"
 #include "adc.h"
-//#include <stdio.h>
-//#include <stdarg.h>
-//#include <string.h>
+#include "dma.h"
 
 #endif /* INCLUDE_H_ */
