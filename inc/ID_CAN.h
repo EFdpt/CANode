@@ -3,7 +3,7 @@
 
 #include "include.h"
 
-//references on https://docs.google.com/spreadsheets/d/1QMofLu4PjR1f2bQfC410LiYba_z6rZJD4pPNm4Pdk8I/edit#gid=1754956647
+//references on https://docs.google.com/spreadsheets/d/1QMofLu4PjR1f2bQfC410LiYba_z6rZJD4pPNm4Pdk8I/edit#gid=1754956647     try this
 
 #define DRIVE_ID		0x001
 
