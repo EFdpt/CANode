@@ -25,9 +25,9 @@
 
 #define BUFFER_SIZE              32
 
-extern uint16_t DMA_DATA[BUFFER_SIZE];
+#define TIMEOUT_MAX				 10000
 
-extern DMA_InitTypeDef DMA_InitStructure;
+extern uint16_t DMA_DATA[BUFFER_SIZE];
 
 /**
   * @brief  This function is used to initialize DMA

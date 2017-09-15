@@ -109,6 +109,7 @@ void CAN_Tx(uint8_t length, uint8_t Data[length], uint32_t ID, CAN_TypeDef* CANx
 	TxMessage.DLC = length;
 	for (i=0; i < length; i++)
 		TxMessage.Data[i]=(uint8_t) Data[i];
+
 	CAN_Transmit(CANx, &TxMessage);
 }
 
