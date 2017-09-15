@@ -21,7 +21,11 @@
 #define DMA_IT_TCIF              DMA_IT_TCIF0
 #define DMA_STREAM_IRQHANDLER    DMA1_Stream0_IRQHandler
 
+#define PERIPHERAL_ADDR 		 GPIOA->IDR
+
 #define BUFFER_SIZE              32
+
+extern uint16_t DMA_DATA[BUFFER_SIZE];
 
 extern DMA_InitTypeDef DMA_InitStructure;
 
