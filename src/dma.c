@@ -24,7 +24,7 @@ uint16_t DMA_DATA[BUFFER_SIZE];
   * @param  None
   * @retval None
   */
-void DMA_init() {
+void DMA_Config() {
 	// statically allocate DMA structure and init it to zero
 	DMA_InitTypeDef DMA_InitStructure = {0};
 	__IO uint32_t	timeout = TIMEOUT_MAX;
