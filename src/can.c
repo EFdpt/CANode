@@ -124,13 +124,13 @@ void CAN2_RX0_IRQHandler(void){
 	if(RxMessage.StdId == May12)
 	{
 		potVCU = RxMessage.Data[0];
-		potVCU<<8;
+		potVCU<<=8;
 		potVCU |= RxMessage.Data[1];
-		potVCU<<8;
+		potVCU<<=8;
 		potVCU |= RxMessage.Data[2];
-		potVCU<<8;
+		potVCU<<=8;
 		potVCU |= RxMessage.Data[3];
-		potVCU<<8;
+		potVCU<<=8;
 		if (potVCU > 0xff0a)
 			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
 		else
