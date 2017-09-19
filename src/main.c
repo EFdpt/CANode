@@ -1,15 +1,5 @@
 #include "include.h"
 
-//#define _FR_DX
-//#define _FR_SX
-//#define _RT_DX
-//#define _RT_SX
-//#define _CRUSCOTTO
-//#define _BATTERIA
-#define _PEDALI
-//#define
-
-
 uint16_t bus_state =1, IPackMsr = 0, SoCMsr = 0, TTabAvg = 0, TTabHigh = 0;
 uint8_t  data[4]= {0};
 uint32_t Aread=0, potVCU=0;
@@ -47,10 +37,10 @@ void SysTick_Handler(void){
 
 
 
-//	if (GPIOC->IDR & (uint32_t)SCK3)	//se non è premuto
+//	if (GPIOC->IDR & (uint32_t)SCK3)	//se non ï¿½ premuto
 //		//	CAN_Tx(4, data, STAR_ID, CAN);
 //		GPIOA->BSRRH |= en23;
-//	else				//il tasto è premuto
+//	else				//il tasto ï¿½ premuto
 //		GPIOA->BSRRL |= en23;
 
 		//	data[0] = (uint8_t)TTabAvg;
