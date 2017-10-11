@@ -5,29 +5,32 @@
  *  @brief		dma.c module
  */
 
+#include <stdlib.h>
+#include <errno.h>
+#include <stdio.h>
 #include "dma.h"
 
+#define TIMEOUT_MAX				 (10000)
+
 #ifdef _PEDALI
+
 	__IO uint16_t THROTTLE_1_DATA[BUFFER_CAPACITY];
 	__IO uint16_t THROTTLE_2_DATA[BUFFER_CAPACITY];
 	__IO uint16_t BRAKE_DATA[BUFFER_CAPACITY];
 	__IO uint16_t PLAUS_1_DATA[BUFFER_CAPACITY];
 	__IO uint16_t PLAUS_2_DATA[BUFFER_CAPACITY];
+
 #elif defined _CRUSCOTTO
 
-#elif defined _FR_DX
+	__IO uint16_t a;
 
-#elif defined _FR_SX
+#elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
 
-#elif defined _RT_DX
+	__IO uint16_t SUSPENSIONS_DATA[BUFFER_CAPACITY];
+	__IO uint16_t PHONIC_DATA[BUFFER_CAPACITY];
 
-#elif defined _RT_SX
-
-#elif defined _BATTERIA
-
-#else
-	#error "No board specified"
 #endif
+
 
 static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream,
 						uint32_t DMA_Stream_Clock,
@@ -35,49 +38,51 @@ static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream,
 						uint32_t peripheral_src, uint32_t memory_dest,
 						uint32_t buffer_size, uint8_t DMA_Stream_IRQ);
 
-static inline void DMA_Timer_Config(uint32_t DMA_Timer_Clock,
-						TIM_TypeDef* DMA_Timer,
-						uint32_t period, uint16_t prescaler,
-						uint16_t clock_division);
-
 void DMA_Config() {
 
 #ifdef _PEDALI
 
 	// switch freno
-	_DMA_Config(DMA_STREAM, DMA_STREAM_CLOCK,
-					DMA_CHANNEL,
-					(uint32_t) &GPIOA->IDR, (uint32_t) BRAKE_DATA,
-					BUFFER_CAPACITY, DMA_STREAM_IRQ);
-	DMA_Timer_Config(RCC_APB2Periph_TIM8, TIM8, DMA_TIMER_PERIODE,
-					DMA_TIMER_PRESCALER, DMA_TIMER_CLOCK_DIVISION);
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+				(uint32_t) &GPIOA->IDR, (uint32_t) BRAKE_DATA,
+				BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
 	// acceleratore 1
-//	_DMA_Config();
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+					(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_1_DATA,
+					BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
 	// acceleratore 2
-//	_DMA_Config();
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+						(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_2_DATA,
+						BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
 	// pressione freno anteriore
-//	_DMA_Config();
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+						(uint32_t) &GPIOA->IDR, (uint32_t) PLAUS_1_DATA,
+						BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
 	// pressione freno posteriore
-//	_DMA_Config();
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+							(uint32_t) &GPIOA->IDR, (uint32_t) PLAUS_2_DATA,
+							BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
 #elif defined _CRUSCOTTO
 
-#elif defined _FR_DX
+	// TODO
 
-#elif defined _FR_SX
+#elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
 
-#elif defined _RT_DX
+	// suspensions
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+								(uint32_t) &GPIOA->IDR, (uint32_t) SUSPENSION_DATA,
+								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
-#elif defined _RT_SX
+	// phonic wheels
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+								(uint32_t) &GPIOA->IDR, (uint32_t) PHONIC_DATA,
+								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
-#elif defined _BATTERIA
-
-#else
-	#error "No board specified"
 #endif
 }
 
@@ -172,45 +177,8 @@ static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Stre
 	/* check if a timeout condition occurred */
 	if (!timeout) {
 	    /* manage the error: to simplify the code enter an infinite loop */
-	    for (;;) { }
+	    // for (;;) { }
+		fprintf(stderr, "DMA Stream wasn't enabled: %s\n", strerror(errno));
+	    exit(1);
 	}
 }
-
-static inline void DMA_Timer_Config(uint32_t DMA_Timer_Clock,
-									TIM_TypeDef* DMA_Timer,
-									uint32_t period, uint16_t prescaler,
-									uint16_t clock_division) {
-	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure = {0};
-
-	// clock enable
-	RCC_APB2PeriphClockCmd(DMA_Timer_Clock, ENABLE);
-
-	// timer init
-	TIM_TimeBaseStructure.TIM_Period = period;
-	TIM_TimeBaseStructure.TIM_Prescaler = prescaler;
-	TIM_TimeBaseStructure.TIM_ClockDivision = clock_division;
-	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseInit(DMA_Timer, &TIM_TimeBaseStructure);
-
-	TIM_ITConfig(DMA_Timer, TIM_IT_Update, ENABLE);
-	TIM_DMAConfig(DMA_Timer, 0, TIM_DMABurstLength_1Transfer);
-	TIM_DMACmd(DMA_Timer, TIM_DMA_Update | TIM_DMA_Trigger | TIM_DMA_COM, ENABLE);
-	TIM_SelectOutputTrigger(DMA_Timer, TIM_TRGOSource_Update);
-	TIM_Cmd(DMA_Timer, ENABLE);
-}
-
-#if 0
-void TIM5_IRQHandler(void) {
- if (TIM_GetITStatus(TIM5, TIM_IT_Update) != RESET)
- {
-    TIM_ClearITPendingBit(TIM5, TIM_IT_Update);
-
-    /*code related to app */
- }
-}
-
-void DMA_STREAM_IRQHANDLER() {
-	if (DMA_GetITStatus(DMA_STREAM, DMA_IT_TCIF))
-		DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_TCIF);
-}
-#endif

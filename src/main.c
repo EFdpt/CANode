@@ -15,7 +15,7 @@ int main(void)
 	BMS_TIMinit();
 
 	NVIC_SetPriority(SysTick_IRQn, 1);
-	if(SysTick_Config((RCC_ClockFreq.SYSCLK_Frequency) / 50));//f = 50Hz -> T = 20ms
+//	if(SysTick_Config((RCC_ClockFreq.SYSCLK_Frequency) / 50));//f = 50Hz -> T = 20ms
 
 	while(1)
 	{
