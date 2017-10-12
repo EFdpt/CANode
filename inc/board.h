@@ -70,20 +70,28 @@
 #define dg31		GPIO_Pin_12	//GPIOB
 #define dg41		GPIO_Pin_14	//GPIOB
 
-#ifdef FR_DX
+
+#ifdef _PEDALI
+
+#define throttle_1		ADCrd1
+#define throttle_2		ADCrd2
+#define brakePot		ADCrd3
+
+#elif defined _FR_DX
+
 #define pickup			SCK3
 #define sospFrDx 		ADCrd1
 #define SteerAng		ADCrd2
 #define	sospSupply		en21
 #define	pickupSupply	en22
 #define SteerAngSupply	en23
+
+#elif defined _CRUSCOTTO
+
+#define pot1			ADCrd1
+#define pot2			ADCrd2
+
 #endif
-
-
-
-
-GPIO_InitTypeDef  GPIO_InitStructure;
-RCC_ClocksTypeDef RCC_ClockFreq;
 
 /* con i define si riesce a ridurre
  * il codice compilato a quello dedicato alla scheda scelta
@@ -94,7 +102,7 @@ RCC_ClocksTypeDef RCC_ClockFreq;
  * @brief: selezione delle funzioni della scheda
  * @note: questa funzione va richiamata nel main per configurare le funzioni secondarie
  *  		dei GPIO
- * @params: tipoScheda può essere una tra:
+ * @params: tipoScheda puï¿½ essere una tra:
  * PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA
  *
  * */

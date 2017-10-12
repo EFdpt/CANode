@@ -8,6 +8,9 @@
 #define _PEDALI
 #include "board.h"
 
+GPIO_InitTypeDef  GPIO_InitStructure;
+RCC_ClocksTypeDef RCC_ClockFreq;
+
 void GPIO_init(GPIO_TypeDef* GPIOx, uint32_t Pin, GPIOMode_TypeDef Mode, GPIOOType_TypeDef OType, GPIOSpeed_TypeDef Speed, GPIOPuPd_TypeDef PuPd){
 	GPIO_InitStructure.GPIO_Pin = Pin;
 	GPIO_InitStructure.GPIO_Mode = Mode;

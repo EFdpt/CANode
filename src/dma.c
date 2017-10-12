@@ -16,13 +16,13 @@
 
 	__IO uint16_t THROTTLE_1_DATA[BUFFER_CAPACITY];
 	__IO uint16_t THROTTLE_2_DATA[BUFFER_CAPACITY];
-	__IO uint16_t BRAKE_DATA[BUFFER_CAPACITY];
-	__IO uint16_t PLAUS_1_DATA[BUFFER_CAPACITY];
-	__IO uint16_t PLAUS_2_DATA[BUFFER_CAPACITY];
+	__IO uint16_t FRONT_BRAKE_DATA[BUFFER_CAPACITY];
+	__IO uint16_t POSTERIOR_BRAKE_DATA[BUFFER_CAPACITY];
 
 #elif defined _CRUSCOTTO
 
-	__IO uint16_t a;
+	__IO uint16_t POTENTIOMETER_1_DATA[BUFFER_CAPACITY];
+	__IO uint16_t POTENTIOMETER_2_DATA[BUFFER_CAPACITY];
 
 #elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
 
@@ -42,34 +42,34 @@ void DMA_Config() {
 
 #ifdef _PEDALI
 
-	// switch freno
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-				(uint32_t) &GPIOA->IDR, (uint32_t) BRAKE_DATA,
-				BUFFER_CAPACITY, DMA2_Stream0_IRQn);
+	// freno anteriore (ADC3 -> DMA2_Stream1, DMA_Channel_2)
+	_DMA_Config(DMA2_Stream1, RCC_AHB1Periph_DMA2, DMA_Channel_2,
+				(uint32_t) &GPIOB->IDR, (uint32_t) FRONT_BRAKE_DATA,
+				BUFFER_CAPACITY, DMA2_Stream1_IRQn);
 
-	// acceleratore 1
+	// acceleratore 1 (ADC1 -> DMA2_Stream0, DMA_Channel_0)
 	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
 					(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_1_DATA,
 					BUFFER_CAPACITY, DMA2_Stream0_IRQn);
 
-	// acceleratore 2
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-						(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_2_DATA,
-						BUFFER_CAPACITY, DMA2_Stream0_IRQn);
+	// acceleratore 2 (ADC2 -> DMA2_Stream2, DMA_Channel_1)
+	_DMA_Config(DMA2_Stream2, RCC_AHB1Periph_DMA2, DMA_Channel_1,
+						(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_2_DATA, // STESSA SORGENTE ???
+						BUFFER_CAPACITY, DMA2_Stream2_IRQn);
 
-	// pressione freno anteriore
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-						(uint32_t) &GPIOA->IDR, (uint32_t) PLAUS_1_DATA,
-						BUFFER_CAPACITY, DMA2_Stream0_IRQn);
-
-	// pressione freno posteriore
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-							(uint32_t) &GPIOA->IDR, (uint32_t) PLAUS_2_DATA,
-							BUFFER_CAPACITY, DMA2_Stream0_IRQn);
+	// TODO: freno posteriore (incongruenze pinout & rete CAN)
 
 #elif defined _CRUSCOTTO
 
-	// TODO
+	// 1st potentiometer (ADC1 -> DMA2_Stream0, DMA_Channel_0)
+	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
+								(uint32_t) &GPIOA->IDR, (uint32_t) POTENTIOMETER_1_DATA,
+								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
+
+	// 2nd potentiometer (ADC2 -> DMA2_Stream2, DMA_Channel_1)
+	_DMA_Config(DMA2_Stream2, RCC_AHB1Periph_DMA2, DMA_Channel_1,
+									(uint32_t) &GPIOA->IDR, (uint32_t) POTENTIOMETER_2_DATA,
+									BUFFER_CAPACITY, DMA2_Stream2_IRQn);
 
 #elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
 

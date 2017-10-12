@@ -31,13 +31,13 @@
 
 	extern __IO uint16_t THROTTLE_1_DATA[BUFFER_CAPACITY];
 	extern __IO uint16_t THROTTLE_2_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t BRAKE_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t PLAUS_1_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t PLAUS_2_DATA[BUFFER_CAPACITY];
+	extern __IO uint16_t FRONT_BRAKE_DATA[BUFFER_CAPACITY];
+	extern __IO uint16_t POSTERIOR_BRAKE_DATA[BUFFER_CAPACITY];
 
 #elif defined _CRUSCOTTO
 
-	extern __IO uint16_t a;
+	extern __IO uint16_t POTENTIOMETER_1_DATA[BUFFER_CAPACITY];
+	extern __IO uint16_t POTENTIOMETER_2_DATA[BUFFER_CAPACITY];
 
 #elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
 
