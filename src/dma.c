@@ -31,13 +31,13 @@
 
 #endif
 
-
 static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream,
 						uint32_t DMA_Stream_Clock,
 						uint32_t DMA_Channel,
 						uint32_t peripheral_src, uint32_t memory_dest,
 						uint32_t buffer_size, uint8_t DMA_Stream_IRQ);
 
+//FIXME ho messo tutte la acquisizioni sull'ADC1 ma su diversi channel. vedi adc.h e adc.c
 void DMA_Config() {
 
 #ifdef _PEDALI

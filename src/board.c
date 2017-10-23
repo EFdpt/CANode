@@ -72,15 +72,10 @@ void Init_Board(){
 
 //	case PEDALI:
 #ifdef _PEDALI
-		//	ADC1/2/3 Peripheral Clock Enable
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
-				RCC_APB2Periph_ADC2 |
-				RCC_APB2Periph_ADC3,
-				ENABLE);
 
 
-		GPIO_init(GPIOA, MCO1, GPIO_Mode_AF, GPIO_OType_PP, GPIO_Speed_25MHz, GPIO_PuPd_NOPULL);
-		GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_MCO);
+		GPIO_init(GPIOA, MCO1, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+//		GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_MCO);
 
 		GPIO_init(GPIOA, en23, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
