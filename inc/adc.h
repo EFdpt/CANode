@@ -8,15 +8,34 @@
 #define ADC_H_
 
 #include "include.h"
-#define ADCrd1ch ADC_Channel_7
-#define ADCrd2ch ADC_Channel_3
-#define ADCrd3ch ADC_Channel_9
-#define ADCrd4ch ADC_Channel_15
+#define ADCrd1ch ADC_Channel_7	//PA7 molex11
+#define ADCrd2ch ADC_Channel_3	//PA3 molex13
+#define ADCrd3ch ADC_Channel_9	//PB1 molex2
+#define ADCrd4ch ADC_Channel_15	//PC5 molex3
 
 #ifdef _PEDALI
 #define brake ADCrd3ch
 #define tps1 ADCrd1ch
 #define tps2 ADCrd2ch
+
+#elif _RT_DX || _RT_SX
+#define susp ADCrd1ch
+
+#elif _FR_DX
+#define susp ADCrd1ch
+#define steer ADCrd2ch
+
+#elif _FR_SX
+#define susp ADCrd1ch
+#define press1 ADCrd2ch
+#define press2 ADCrd3ch
+
+#elif _COG
+#define accx ADCrd1ch
+#define accy ADCrd2ch
+#define accz ADCrd3ch
+#define gyro ADCrd4ch
+
 #endif
 
 

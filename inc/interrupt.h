@@ -23,10 +23,14 @@
 		__set_PRIMASK(old_primask);				\
 	} while (0)
 
-/*TODO OVRIE restart DMA transactions,
+/*TODO OVR restart DMA transactions,
  * vengono disabilitate automaticamente, tocca farle ripartire
  * pag 400 RM0090
 */
+//TODO EOC
+//TODO AWD
+
+
 #ifdef __cplusplus
 }
 #endif

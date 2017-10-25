@@ -34,7 +34,7 @@
 	extern __IO uint16_t FRONT_BRAKE_DATA[BUFFER_CAPACITY];
 	extern __IO uint16_t POSTERIOR_BRAKE_DATA[BUFFER_CAPACITY];
 
-#elif defined _CRUSCOTTO
+#elif _CRUSCOTTO
 
 	extern __IO uint16_t POTENTIOMETER_1_DATA[BUFFER_CAPACITY];
 	extern __IO uint16_t POTENTIOMETER_2_DATA[BUFFER_CAPACITY];
@@ -44,7 +44,7 @@
 	extern __IO	uint16_t SUSPENSIONS_DATA[BUFFER_CAPACITY];
 	extern __IO uint16_t PHONIC_DATA[BUFFER_CAPACITY];
 
-#elif defined _BATTERIA
+#elif _BATTERIA
 
 #else
 	#error "No board specified"

@@ -120,7 +120,7 @@ void Init_Board(){
 
 //		break;
 //	case CRUSCOTTO:
-#elif defined _CRUSCOTTO
+#elif _CRUSCOTTO
 
 		//TODO cruscotto Init
 		/* 1x AIR button - D
@@ -196,7 +196,7 @@ void Init_Board(){
 //		break;
 //	case FR_DX:
 
-#elif defined _FR_DX
+#elif _FR_DX
 		//TODO fr_dx ADC Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -246,7 +246,7 @@ void Init_Board(){
 
 //		break;
 //	case FR_SX:
-#elif defined _FR_SX
+#elif _FR_SX
 		//TODO fr_sx Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -299,7 +299,7 @@ void Init_Board(){
 
 //		break;
 //	case RT_DX:
-#elif defined _RT_DX
+#elif _RT_DX
 		//TODO rt_dx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -343,7 +343,7 @@ void Init_Board(){
 
 //		break;
 //	case RT_SX:
-#elif defined _RT_SX
+#elif _RT_SX
 		//TODO rt_sx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -387,7 +387,7 @@ void Init_Board(){
 
 //		break;
 //	case BATTERIA:
-#elif defined _BATTERIA
+#elif _BATTERIA
 		//TODO batteria Init
 
 		GPIO_init(GPIOA, tempRD, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
@@ -419,16 +419,6 @@ void Init_Board(){
 #else
 	#error "No board specified"
 #endif
-
-//		break;
-//	case COG:
-		//TODO CoG Init
-
-//		break;
-//	default:
-
-//		break;
-//	}	// end of the MEGA switch
 
 
 }

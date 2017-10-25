@@ -6,9 +6,7 @@ uint16_t i=0;
 extern uint16_t bus_state, IPackMsr, SoCMsr, TTabAvg, TTabHigh;
 extern uint32_t potVCU;
 
-/*il parametro tipoScheda deve essere uno tra
- * PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG
- * */
+/**/
 void CAN_init()
 {
 	NVIC_InitTypeDef  NVIC_InitStructure;
@@ -16,7 +14,8 @@ void CAN_init()
 	CAN_InitTypeDef	CAN_InitStructure;
 	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
 
-
+	/*devono essere abilitate CAN1 e CAN2 poiché CAN2 è slave
+	 * */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2 | RCC_APB1Periph_CAN1, ENABLE);
 
 	//RX
@@ -50,7 +49,7 @@ void CAN_init()
 	CAN_InitStructure.CAN_TTCM = DISABLE;
 	CAN_InitStructure.CAN_ABOM = ENABLE;
 	CAN_InitStructure.CAN_AWUM = DISABLE;
-	CAN_InitStructure.CAN_NART = ENABLE;	//ritrasmissione NON automatica, da abilitare
+	CAN_InitStructure.CAN_NART = ENABLE;	//abilitazione ritrasmissione NON automatica
 	CAN_InitStructure.CAN_RFLM = DISABLE;
 	CAN_InitStructure.CAN_TXFP = DISABLE;
 	CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
@@ -64,9 +63,6 @@ void CAN_init()
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
 	 *  */
 
-//	switch (posizione){
-//
-//	case PEDALI | FR_DX | FR_SX | RT_DX | RT_SX | BATTERIA:
 #ifdef _PEDALI | _FR_DX | _FR_SX | _RT_DX | _RT_SX | _BATTERIA
 		CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
 		CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
@@ -88,15 +84,13 @@ void CAN_init()
 		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
 		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 		NVIC_Init(&NVIC_InitStructure);
-//	break;
+
+
+#elif _CRUSCOTTO
+
+
 #endif
 
-//	case CRUSCOTTO:
-//		break;
-//
-//	default:
-//		break;
-//	}
 
 }
 

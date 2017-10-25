@@ -16,7 +16,7 @@
 //#define _CRUSCOTTO
 //#define _BATTERIA
 #define _PEDALI
-//#define
+//#define _COG
 
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
