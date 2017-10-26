@@ -14,37 +14,74 @@
 
 #include "include.h"
 
-#if 0
-#define DMA_STREAM_CLOCK         RCC_AHB1Periph_DMA2
-#define DMA_STREAM               DMA2_Stream0
-#define DMA_CHANNEL              DMA_Channel_0
-#define DMA_STREAM_IRQ           DMA2_Stream0_IRQn
-
-// Transfer complete interrupt mask
-#define DMA_IT_TCIF              DMA_IT_TCIF0
-#define DMA_STREAM_IRQHANDLER    DMA2_Stream0_IRQHandler
-#endif
-
-#define BUFFER_CAPACITY          (128)
+#define DATA_NUM		        (64)
 
 #ifdef _PEDALI
 
-	extern __IO uint16_t THROTTLE_1_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t THROTTLE_2_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t FRONT_BRAKE_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t POSTERIOR_BRAKE_DATA[BUFFER_CAPACITY];
+	#define DMA_STREAM			DMA2_Stream0
+	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
-#elif _CRUSCOTTO
+	#define ADC_SOURCE			ADC1
+	#define ADC_SCAN_NUM		3
 
-	extern __IO uint16_t POTENTIOMETER_1_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t POTENTIOMETER_2_DATA[BUFFER_CAPACITY];
+	#define	BUFFER_SIZE			DATA_NUM * ADC_SCAN_NUM
 
-#elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
+	extern __IO uint16_t BUFFER_DATA[BUFFER_SIZE];
 
-	extern __IO	uint16_t SUSPENSIONS_DATA[BUFFER_CAPACITY];
-	extern __IO uint16_t PHONIC_DATA[BUFFER_CAPACITY];
+#elif defined(_RT_DX) || defined(_RT_SX)
 
-#elif _BATTERIA
+	#define DMA_STREAM			DMA2_Stream0
+	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define ADC_SOURCE			ADC1
+	#define ADC_SCAN_NUM		1
+
+	#define	BUFFER_SIZE			DATA_NUM * ADC_SCAN_NUM
+
+	extern __IO uint16_t BUFFER_DATA[BUFFER_SIZE];
+
+#elif defined(_FR_DX)
+
+	#define DMA_STREAM			DMA2_Stream0
+	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define ADC_SOURCE			ADC1
+	#define ADC_SCAN_NUM		2
+
+	#define	BUFFER_SIZE			DATA_NUM * ADC_SCAN_NUM
+
+	extern __IO uint16_t BUFFER_DATA[BUFFER_SIZE];
+
+#elif defined(_FR_SX)
+
+	#define DMA_STREAM			DMA2_Stream0
+	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define ADC_SOURCE			ADC1
+	#define ADC_SCAN_NUM		3
+
+	#define	BUFFER_SIZE			DATA_NUM * ADC_SCAN_NUM
+
+	extern __IO uint16_t BUFFER_DATA[BUFFER_SIZE];
+
+#elif defined(_COG)
+
+	#define DMA_STREAM			DMA2_Stream0
+	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define ADC_SOURCE			ADC1
+	#define ADC_SCAN_NUM		4
+
+	#define	BUFFER_SIZE			DATA_NUM * ADC_SCAN_NUM
+
+	extern __IO uint16_t BUFFER_DATA[BUFFER_SIZE];
+
+#elif defined(_CRUSCOTTO) || defined(_BATTERIA)
 
 #else
 	#error "No board specified"
@@ -55,7 +92,7 @@
   * @param  None
   * @retval None
   */
-void DMA_Config();
+extern void DMA_Config();
 
 #ifdef __cplusplus
 }

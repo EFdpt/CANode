@@ -5,86 +5,17 @@
  *  @brief		dma.c module
  */
 
-#include <stdlib.h>
-#include <errno.h>
-#include <stdio.h>
 #include "dma.h"
 
 #define TIMEOUT_MAX				 (10000)
 
-#ifdef _PEDALI
+#ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
+			defined(_FR_SX) || defined(_COG)
 
-	__IO uint16_t THROTTLE_1_DATA[BUFFER_CAPACITY];
-	__IO uint16_t THROTTLE_2_DATA[BUFFER_CAPACITY];
-	__IO uint16_t FRONT_BRAKE_DATA[BUFFER_CAPACITY];
-	__IO uint16_t POSTERIOR_BRAKE_DATA[BUFFER_CAPACITY];
-
-#elif defined _CRUSCOTTO
-
-	__IO uint16_t POTENTIOMETER_1_DATA[BUFFER_CAPACITY];
-	__IO uint16_t POTENTIOMETER_2_DATA[BUFFER_CAPACITY];
-
-#elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
-
-	__IO uint16_t SUSPENSIONS_DATA[BUFFER_CAPACITY];
-	__IO uint16_t PHONIC_DATA[BUFFER_CAPACITY];
+	__IO uint16_t BUFFER_DATA[BUFFER_SIZE];
 
 #endif
 
-static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream,
-						uint32_t DMA_Stream_Clock,
-						uint32_t DMA_Channel,
-						uint32_t peripheral_src, uint32_t memory_dest,
-						uint32_t buffer_size, uint8_t DMA_Stream_IRQ);
-
-//FIXME ho messo tutte la acquisizioni sull'ADC1 ma su diversi channel. vedi adc.h e adc.c
-void DMA_Config() {
-
-#ifdef _PEDALI
-
-	// freno anteriore (ADC3 -> DMA2_Stream1, DMA_Channel_2)
-	_DMA_Config(DMA2_Stream1, RCC_AHB1Periph_DMA2, DMA_Channel_2,
-				(uint32_t) &GPIOB->IDR, (uint32_t) FRONT_BRAKE_DATA,
-				BUFFER_CAPACITY, DMA2_Stream1_IRQn);
-
-	// acceleratore 1 (ADC1 -> DMA2_Stream0, DMA_Channel_0)
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-					(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_1_DATA,
-					BUFFER_CAPACITY, DMA2_Stream0_IRQn);
-
-	// acceleratore 2 (ADC2 -> DMA2_Stream2, DMA_Channel_1)
-	_DMA_Config(DMA2_Stream2, RCC_AHB1Periph_DMA2, DMA_Channel_1,
-						(uint32_t) &GPIOA->IDR, (uint32_t) THROTTLE_2_DATA, // STESSA SORGENTE ???
-						BUFFER_CAPACITY, DMA2_Stream2_IRQn);
-
-	// TODO: freno posteriore (incongruenze pinout & rete CAN)
-
-#elif defined _CRUSCOTTO
-
-	// 1st potentiometer (ADC1 -> DMA2_Stream0, DMA_Channel_0)
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-								(uint32_t) &GPIOA->IDR, (uint32_t) POTENTIOMETER_1_DATA,
-								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
-
-	// 2nd potentiometer (ADC2 -> DMA2_Stream2, DMA_Channel_1)
-	_DMA_Config(DMA2_Stream2, RCC_AHB1Periph_DMA2, DMA_Channel_1,
-									(uint32_t) &GPIOA->IDR, (uint32_t) POTENTIOMETER_2_DATA,
-									BUFFER_CAPACITY, DMA2_Stream2_IRQn);
-
-#elif defined _FR_DX || defined _FR_SX || defined _RT_DX || defined _RT_SX
-
-	// suspensions
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-								(uint32_t) &GPIOA->IDR, (uint32_t) SUSPENSION_DATA,
-								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
-
-	// phonic wheels
-	_DMA_Config(DMA2_Stream0, RCC_AHB1Periph_DMA2, DMA_Channel_0,
-								(uint32_t) &GPIOA->IDR, (uint32_t) PHONIC_DATA,
-								BUFFER_CAPACITY, DMA2_Stream0_IRQn);
-
-#endif
-}
 
 /**
   * @brief  This function configure DMA for transferring data from peripheral
@@ -101,10 +32,10 @@ void DMA_Config() {
   * @param  None
   * @retval None
   */
-static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Stream_Clock,
-				uint32_t DMA_Channel,
-				uint32_t peripheral_src, uint32_t memory_dest,
-				uint32_t buffer_size, uint8_t DMA_Stream_IRQ) {
+void DMA_Config() {
+
+#ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
+			defined(_FR_SX) || defined(_COG)
 
 	// allocate DMA structure and init it to zero
 	DMA_InitTypeDef 	DMA_InitStructure = {0};
@@ -114,18 +45,18 @@ static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Stre
 	__IO uint32_t		timeout = TIMEOUT_MAX;
 
 	// enable DMA clock for selected stream
-	RCC_AHB1PeriphClockCmd(DMA_Stream_Clock, ENABLE);
+	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2, ENABLE);
 
-	DMA_InitStructure.DMA_Channel = DMA_Channel;
+	DMA_InitStructure.DMA_Channel = DMA_CHANNEL;
 
 	// size of buffer in memory in which transfer data
-	DMA_InitStructure.DMA_BufferSize = buffer_size;
+	DMA_InitStructure.DMA_BufferSize = BUFFER_SIZE;
 
 	// pointer to buffer in memory
-	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) memory_dest;
+	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) BUFFER_DATA;
 
 	// pointer to source peripheral
-	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) peripheral_src;
+	DMA_InitStructure.DMA_PeripheralBaseAddr = (uint32_t) &ADC_SOURCE -> DR;
 
 	// one data transfer per each transaction
 	DMA_InitStructure.DMA_MemoryBurst = DMA_MemoryBurst_Single;
@@ -157,28 +88,28 @@ static inline void _DMA_Config(DMA_Stream_TypeDef* DMA_Stream, uint32_t DMA_Stre
 	// due to direct mode configuration, this value is ignored
 	DMA_InitStructure.DMA_FIFOThreshold = DMA_FIFOThreshold_Full;
 
-	DMA_Init(DMA_Stream, &DMA_InitStructure);
+	DMA_Init(DMA_STREAM, &DMA_InitStructure);
 
 	/* enable DMA Transfer Complete interrupt */
-	DMA_ITConfig(DMA_Stream, DMA_IT_TC, ENABLE);
+	DMA_ITConfig(DMA_STREAM, DMA_IT_TC, ENABLE);
 
-	DMA_Cmd(DMA_Stream, ENABLE);
+	DMA_Cmd(DMA_STREAM, ENABLE);
 
 	// enable the DMA Stream IRQ Channel */
-	NVIC_InitStructure.NVIC_IRQChannel = DMA_Stream_IRQ;
+	NVIC_InitStructure.NVIC_IRQChannel = DMA_STREAM_IRQ;
 	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
 	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
 	NVIC_Init(&NVIC_InitStructure);
 
 	// wait until DMA Stream has been effectively enabled
-	while ((DMA_GetCmdStatus(DMA_Stream) != ENABLE) && (timeout-- > 0)) { }
+	while ((DMA_GetCmdStatus(DMA_STREAM) != ENABLE) && (timeout-- > 0)) { }
 
 	/* check if a timeout condition occurred */
 	if (!timeout) {
-	    /* manage the error: to simplify the code enter an infinite loop */
-	    // for (;;) { }
-		fprintf(stderr, "DMA Stream wasn't enabled: %s\n", strerror(errno));
-	    exit(1);
+	    for (;;) { }
 	}
+#else
+
+#endif
 }
