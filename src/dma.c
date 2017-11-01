@@ -9,12 +9,46 @@
 
 #define TIMEOUT_MAX				 (10000)
 
+// initialize an internal buffer for all channels
 #ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
 			defined(_FR_SX) || defined(_COG)
 
-	__IO uint16_t BUFFER_DATA[BUFFER_SIZE];
+	#define BUFFER_CAPACITY		(BUFFER_SIZE * ADC_SCAN_NUM)
+
+	__IO uint16_t BUFFER_DATA[BUFFER_CAPACITY] = {0};
 
 #endif
+
+// set data pointers to different offsets from internal buffer's base address
+#ifdef _PEDALI
+
+	__IO uint16_t* TPS1_DATA = BUFFER_DATA;
+	__IO uint16_t* TPS2_DATA = BUFFER_DATA + 1;
+	__IO uint16_t* BRAKE_DATA = BUFFER_DATA + 2;
+
+#elif defined(_RT_DX) || defined(_RT_SX)
+
+	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
+
+#elif defined(_FR_DX)
+
+	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
+	__IO uint16_t* STEER_DATA = BUFFER_DATA + 1;
+
+#elif defined(_FR_SX)
+
+	__IO uint16_t* PRESS1_DATA = BUFFER_DATA;
+	__IO uint16_t* PRESS2_DATA = BUFFER_DATA + 1;
+	__IO uint16_t* SUSP_DATA = BUFFER_DATA + 2;
+
+#elif defined(_COG)
+
+	__IO uint16_t* ACCX_DATA = BUFFER_DATA;
+	__IO uint16_t* ACCY_DATA = BUFFER_DATA + 1;
+	__IO uint16_t* ACCZ_DATA = BUFFER_DATA + 2;
+	__IO uint16_t* GYRO_DATA = BUFFER_DATA + 3;
+
+#elif
 
 
 /**
@@ -50,7 +84,7 @@ void DMA_Config() {
 	DMA_InitStructure.DMA_Channel = DMA_CHANNEL;
 
 	// size of buffer in memory in which transfer data
-	DMA_InitStructure.DMA_BufferSize = BUFFER_SIZE;
+	DMA_InitStructure.DMA_BufferSize = BUFFER_CAPACITY;
 
 	// pointer to buffer in memory
 	DMA_InitStructure.DMA_Memory0BaseAddr = (uint32_t) BUFFER_DATA;
