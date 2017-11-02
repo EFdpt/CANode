@@ -63,7 +63,7 @@ void CAN_init()
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
 	 *  */
 
-#ifdef _PEDALI | _FR_DX | _FR_SX | _RT_DX | _RT_SX | _BATTERIA
+#ifdef _TEST_UP
 		CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
 		CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
 		CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_16bit; //32
@@ -86,7 +86,7 @@ void CAN_init()
 		NVIC_Init(&NVIC_InitStructure);
 
 
-#elif _CRUSCOTTO
+#elif defined (_CRUSCOTTO) || defined (_FR_DX) || defined (_FR_SX) || defined (_RT_DX )|| defined(_RT_SX) || defined(_BATTERIA) || defined(_TEST_DOWN)
 
 
 #endif

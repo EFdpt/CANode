@@ -78,9 +78,9 @@ void ADC_Config(void)
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
 
-#elif _CRUSCOTTO
+#elif defined (_CRUSCOTTO) || defined (_TEST)
 
-#elif _RT_DX || _RT_SX
+#elif defined (_RT_DX) || defined (_RT_SX)
   //	ADC1 Peripheral Clock Enable
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
@@ -124,7 +124,7 @@ void ADC_Config(void)
   ADC_Cmd(ADC1, ENABLE);
 
 
-#elif _FR_DX
+#elif defined (_FR_DX)
   //	ADC1 Peripheral Clock Enable
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
@@ -169,7 +169,7 @@ void ADC_Config(void)
   ADC_Cmd(ADC1, ENABLE);
 
 
-#elif _FR_SX
+#elif defined (_FR_SX)
 
   //	ADC1 Peripheral Clock Enable
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
@@ -181,8 +181,8 @@ void ADC_Config(void)
   ADC_InitStructure.ADC_ContinuousConvMode = ENABLE;		//conversioni continue
   ADC_InitStructure.ADC_ExternalTrigConvEdge = ADC_ExternalTrigConvEdge_None; //nessun trigger edge esterno
   ADC_InitStructure.ADC_ExternalTrigConv = ADC_ExternalTrigConv_T1_CC1;	//TIM1 trigger, ma nessun trigger abilitato
-  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	//allineamento a destra
   ADC_InitStructure.ADC_NbrOfConversion = 3;				//3 conversioni per sequenza
+  ADC_InitStructure.ADC_DataAlign = ADC_DataAlign_Right;	//allineamento a destra
   ADC_Init(ADC1, &ADC_InitStructure);
 
   /* ADC1 configurazione canali, ordine di scansione e sample time **************************************/
@@ -215,7 +215,7 @@ void ADC_Config(void)
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
 
-#elif _COG
+#elif defined (_COG) || defined(_TEST_UP)
 
   //	ADC1 Peripheral Clock Enable
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
@@ -262,7 +262,8 @@ void ADC_Config(void)
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
 
-
+#else
+	#error "Nessuna scheda definita"
 
   #endif
 

@@ -18,19 +18,19 @@
 #define tps1 ADCrd1ch
 #define tps2 ADCrd2ch
 
-#elif _RT_DX || _RT_SX
+#elif defined(_RT_DX) || defined(_RT_SX)
 #define susp ADCrd1ch
 
-#elif _FR_DX
+#elif defined (_FR_DX)
 #define susp ADCrd1ch
 #define steer ADCrd2ch
 
-#elif _FR_SX
+#elif defined (_FR_SX)
 #define susp ADCrd1ch
 #define press1 ADCrd2ch
 #define press2 ADCrd3ch
 
-#elif _COG
+#elif defined (_COG) || defined (_TEST_UP)
 #define accx ADCrd1ch
 #define accy ADCrd2ch
 #define accz ADCrd3ch
@@ -39,6 +39,6 @@
 #endif
 
 
-	void ADC_Config(void);
+void ADC_Config(void);
 
 #endif	//ADC_H_
