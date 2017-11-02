@@ -10,8 +10,7 @@
 #define TIMEOUT_MAX				 (10000)
 
 // initialize an internal buffer for all channels
-#ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
-			defined(_FR_SX) || defined(_COG)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG)
 
 	#define BUFFER_CAPACITY		(BUFFER_SIZE * ADC_SCAN_NUM)
 
@@ -20,7 +19,7 @@
 #endif
 
 // set data pointers to different offsets from internal buffer's base address
-#ifdef _PEDALI
+#if defined(_PEDALI)
 
 	__IO uint16_t* TPS1_DATA = BUFFER_DATA;
 	__IO uint16_t* TPS2_DATA = BUFFER_DATA + 1;
@@ -48,7 +47,7 @@
 	__IO uint16_t* ACCZ_DATA = BUFFER_DATA + 2;
 	__IO uint16_t* GYRO_DATA = BUFFER_DATA + 3;
 
-#elif
+#endif
 
 
 /**
@@ -68,8 +67,7 @@
   */
 void DMA_Config() {
 
-#ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
-			defined(_FR_SX) || defined(_COG)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG)
 
 	// allocate DMA structure and init it to zero
 	DMA_InitTypeDef 	DMA_InitStructure = {0};

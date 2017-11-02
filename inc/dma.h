@@ -16,7 +16,7 @@
 
 #define BUFFER_SIZE		        (64)
 
-#ifdef _PEDALI
+#if defined(_PEDALI)
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
@@ -85,8 +85,7 @@
 	#error "No board specified"
 #endif
 
-#ifdef _PEDALI || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
-			defined(_FR_SX) || defined(_COG)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG)
 
 	// remapping of buffer position based on ADC_SCAN_NUM offset
 	// i.e.
