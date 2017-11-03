@@ -65,7 +65,7 @@
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
 
-#elif defined(_COG)
+#elif defined(_COG) || defined(_TEST_UP)
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
@@ -79,7 +79,7 @@
 	extern __IO uint16_t* ACCZ_DATA;
 	extern __IO uint16_t* GYRO_DATA;
 
-#elif defined(_CRUSCOTTO) || defined(_BATTERIA)
+#elif defined(_CRUSCOTTO) || defined(_BATTERIA) || defined(_TEST_DOWN)
 
 #else
 	#error "No board specified"

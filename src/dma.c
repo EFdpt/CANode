@@ -67,7 +67,7 @@
   */
 void DMA_Config() {
 
-#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
 
 	// allocate DMA structure and init it to zero
 	DMA_InitTypeDef 	DMA_InitStructure = {0};
