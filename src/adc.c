@@ -1,6 +1,5 @@
 #include "adc.h"
 
-//TODO ADC_Config
 /*i registri per le acquisizioni sono
  * ADC_DR per i regular channel
  * ADC_CDR, due acquisizioni per i modi dual e triple

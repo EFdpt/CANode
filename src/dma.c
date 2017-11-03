@@ -10,7 +10,7 @@
 #define TIMEOUT_MAX				 (10000)
 
 // initialize an internal buffer for all channels
-#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
 
 	#define BUFFER_CAPACITY		(BUFFER_SIZE * ADC_SCAN_NUM)
 
