@@ -31,7 +31,7 @@ void ADC_Config(void)
   ADC_CommonInit(&ADC_CommonInitStructure);
 
 
-#ifdef _PEDALI
+#if defined(_PEDALI)
 
   //	ADC1 Peripheral Clock Enable
   RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
@@ -77,7 +77,7 @@ void ADC_Config(void)
   /* Enable ADC1 */
   ADC_Cmd(ADC1, ENABLE);
 
-#elif defined (_CRUSCOTTO) || defined (_TEST)
+#elif defined (_CRUSCOTTO) || defined (_TEST_DOWN)
 
 #elif defined (_RT_DX) || defined (_RT_SX)
   //	ADC1 Peripheral Clock Enable
