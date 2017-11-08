@@ -21,6 +21,8 @@ void ADC_Config(void)
   ADC_InitTypeDef       ADC_InitStructure;
   ADC_CommonInitTypeDef ADC_CommonInitStructure;
 
+  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+
   ADC_DeInit();	//reset default config
 
   /* ADC Common Init **********************************************************/
@@ -30,11 +32,10 @@ void ADC_Config(void)
   ADC_CommonInitStructure.ADC_TwoSamplingDelay = ADC_TwoSamplingDelay_5Cycles;
   ADC_CommonInit(&ADC_CommonInitStructure);
 
-
 #if defined(_PEDALI)
 
   //	ADC1 Peripheral Clock Enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 
   /* ADC Init ****************************************************************/
@@ -81,7 +82,7 @@ void ADC_Config(void)
 
 #elif defined (_RT_DX) || defined (_RT_SX)
   //	ADC1 Peripheral Clock Enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 
   /* ADC Init ****************************************************************/
@@ -125,7 +126,7 @@ void ADC_Config(void)
 
 #elif defined (_FR_DX)
   //	ADC1 Peripheral Clock Enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 
   /* ADC Init ****************************************************************/
@@ -171,7 +172,7 @@ void ADC_Config(void)
 #elif defined (_FR_SX)
 
   //	ADC1 Peripheral Clock Enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 
   /* ADC Init ****************************************************************/
@@ -217,7 +218,7 @@ void ADC_Config(void)
 #elif defined (_COG) || defined(_TEST_UP)
 
   //	ADC1 Peripheral Clock Enable
-  RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
+  //RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1, ENABLE);
 
 
   /* ADC Init ****************************************************************/

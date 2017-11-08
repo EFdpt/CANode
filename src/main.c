@@ -12,11 +12,10 @@ int main(void)
 	SystemInit();
 
 	Init_Board();
-	BMS_TIMinit();
+	//BMS_TIMinit();
 
-	NVIC_SetPriority(SysTick_IRQn, 1);
 #ifdef _TEST_UP
-	if(SysTick_Config((RCC_ClockFreq.SYSCLK_Frequency) / 50));//f = 50Hz -> T = 20ms
+	if(SysTick_Config((RCC_ClockFreq.SYSCLK_Frequency) / 50)) //f = 50Hz -> T = 20ms
 #endif
 	while(1)
 	{

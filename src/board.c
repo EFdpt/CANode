@@ -54,7 +54,7 @@ void Init_Board(){
 	RCC_GetClocksFreq(&RCC_ClockFreq);//check the frequency
 
 	/* GPIOA/B/C/D Peripheral clock enable */
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 |
+	RCC_AHB1PeriphClockCmd(
 			RCC_AHB1Periph_GPIOA |
 			RCC_AHB1Periph_GPIOB |
 			RCC_AHB1Periph_GPIOC |
@@ -113,10 +113,7 @@ void Init_Board(){
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
 
-		CAN_init();
-		//TODO ADC INIT
-		/* ADC configuration */
-		//ADC_Config();
+
 
 #elif defined (_TEST_DOWN)
 /*test di consumi bassi tutte le periferiche sono spente e gli integrati sulla scheda
@@ -172,7 +169,7 @@ void Init_Board(){
 		GPIO_init(GPIOA, ADCrd1 | ADCrd2 |tempRD, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
 
 		/*il pin 18 del molex dovrebbe uscire il clock del proc fa un pin nella mmh*/
-		GPIO_init(GPIOA, MCO1, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
+		GPIO_init(GPIOA, MCO1, GPIO_Mode_AF, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
 		GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_MCO);
 
 		/*i pin non utilizzati vengono configurati come digital IN e pullDOWN*/
@@ -206,10 +203,6 @@ void Init_Board(){
 
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
-
-		CAN_init();
-		//TODO ADC Init
-		ADC_Config();
 
 #elif defined (_CRUSCOTTO)
 
@@ -278,15 +271,6 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(CRUSCOTTO);
-		//TODO ADC INIT
-		/* ADC configuration */
-		ADC_Config();
-
-
-//		break;
-//	case FR_DX:
-
 #elif defined (_FR_DX)
 		//TODO fr_dx ADC Init
 
@@ -332,11 +316,6 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(FR_DX);
-		//TODO ADC Init
-
-//		break;
-//	case FR_SX:
 #elif defined (_FR_SX)
 		//TODO fr_sx Init
 
@@ -385,11 +364,6 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(FR_SX);
-		//TODO ADC Init
-
-//		break;
-//	case RT_DX:
 #elif defined (_RT_DX)
 		//TODO rt_dx Init
 		//	ADC1/2 Peripheral Clock Enable
@@ -429,11 +403,6 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(RT_DX);
-		//TODO ADC Init
-
-//		break;
-//	case RT_SX:
 #elif defined (_RT_SX)
 		//TODO rt_sx Init
 		//	ADC1/2 Peripheral Clock Enable
@@ -473,11 +442,6 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(RT_SX);
-		//TODO ADC Init
-
-//		break;
-//	case BATTERIA:
 #elif defined (_BATTERIA)
 		//TODO batteria Init
 
@@ -504,13 +468,12 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(BATTERIA);
-		//TODO I2C_init() func
-		//		I2C_init();
 #else
 	#error "No board specified"
 #endif
 
-
+	CAN_init();
+	ADC_Config();
+	DMA_Config();
 }
 
