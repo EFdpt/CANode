@@ -36,7 +36,6 @@
 //comunications and digitals
 #define	CAN_RX		GPIO_Pin_5
 #define	CAN_TX		GPIO_Pin_6
-#define ASCan		GPIO_Pin_13
 #define CAN_GPIO	GPIOB
 
 #define SCK3		GPIO_Pin_10

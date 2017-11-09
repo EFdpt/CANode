@@ -1,8 +1,8 @@
 /*
- * can.h
- *
- *  Created on: Jan 11, 2015
- *      Author: Simone Palombi
+ *  @file 		can.h
+ *  @author		Arella Matteo
+ *  @date 		9 nov 2017
+ *  @brief		Header for can.c module
  */
 
 #ifndef CAN_H_
@@ -10,33 +10,24 @@
 
 #include "include.h"
 
-//CAN1->Master ???
-//CAN2->Slave  ???
+/**
+ * 	packets ID
+ */
+#define VCU_EVENT_ID		(0x00000022)
 
-//CAN defines
-#define CAN				CAN2
+#define FR_DX_ID			(0x00000001)
+#define FR_SX_ID			(0x00000002)
+#define RT_DX_ID			(0x00000004)
+#define RT_SX_ID			(0x00000008)
+#define CRUSCOTTO_ID		(0x00000010)
+#define BATTERIA_ID			(0x00000020)
+#define PEDALI_ID			(0x00000040)
+#define COG_ID				(0x00000080)
 
-//defines FILTER_NUM
-#define CAN_Filt_Num		14
+void CAN_Config();
 
-#define N_FILTER			1
+void CAN_Tx(uint8_t lenght, uint8_t data[lenght], uint32_t id);
 
-//Controllo errori
-#define TEC_REC_ERROR	1	//Sia TEC che REC maggiori di 127
-#define TEC_ERROR		2	//TEC maggiore di 127
-#define REC_ERROR		3	//REC maggiore di 127
-
-void CAN_init();
-
-//CANx can be one of the CAN defines
-void CAN_Tx(uint8_t lenght, uint8_t Data[lenght], uint32_t ID, CAN_TypeDef* CANx);
-void CAN2_RX0_IRQHandler(void);
-void CAN_BMS_Manage_Rx(CanRxMsg RxMessage);
 void CAN_Manage_Rx(CanRxMsg RxMessage);
-uint8_t CAN_StatusControl(CAN_TypeDef* CANx);
-
-//CAN_FilterNum can be one of the defines FILTER_NUM
-void CAN_SetFilter(uint16_t* ID, uint8_t IDcount, uint8_t CAN_FilterNum);
-void CAN_DisableFilter(uint8_t CAN_FilterNum);
 
 #endif /* CAN_H_ */

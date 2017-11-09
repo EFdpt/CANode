@@ -1,29 +1,29 @@
-#include "include.h"
+/*
+ *  @file 		can.c
+ *  @author		Arella Matteo
+ *  @date 		9 nov 2017
+ *  @brief		can.c module
+ */
 
-CanTxMsg TxMessage;
-uint16_t i=0;
+#include "can.h"
 
-extern uint16_t bus_state, IPackMsr, SoCMsr, TTabAvg, TTabHigh;
-extern uint32_t potVCU;
-
-/**/
-void CAN_init()
-{
+void CAN_Config() {
 	NVIC_InitTypeDef  NVIC_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 	CAN_InitTypeDef	CAN_InitStructure;
 	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
 
-	/*devono essere abilitate CAN1 e CAN2 poiché CAN2 è slave
-	 * */
+	/* Using CAN2 but for the fact CAN2 is slave CAN1 clock must be enabled too */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2 | RCC_APB1Periph_CAN1, ENABLE);
 
-	//RX
+	/* Configure GPIO Pins for CAN2 */
+
+	/* RX - PB5 */
 	GPIO_InitStructure.GPIO_Pin = CAN_RX;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
 
-	//TX
+	/* TX - PB6 */
 	GPIO_InitStructure.GPIO_Pin = CAN_TX;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -31,21 +31,11 @@ void CAN_init()
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = ASCan;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
-
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource5, GPIO_AF_CAN2);
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource6, GPIO_AF_CAN2);
 
-	//inizializzazione default
-	CAN_DeInit(CAN);
-	CAN_StructInit(&CAN_InitStructure);
+	// TODO: fin qui tutto bene
 
-	//inizializzazione vera
 	CAN_InitStructure.CAN_TTCM = DISABLE;
 	CAN_InitStructure.CAN_ABOM = ENABLE;
 	CAN_InitStructure.CAN_AWUM = DISABLE;
@@ -57,7 +47,7 @@ void CAN_init()
 	CAN_InitStructure.CAN_BS1 = CAN_BS1_14tq;
 	CAN_InitStructure.CAN_BS2 = CAN_BS2_6tq;
 	CAN_InitStructure.CAN_Prescaler = 2;//1Mb/s
-	CAN_Init(CAN, &CAN_InitStructure);
+	CAN_Init(CAN2, &CAN_InitStructure);
 	/*
 	 * CAN BaudRate = 1/NominalBitTime
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
@@ -94,17 +84,18 @@ void CAN_init()
 
 }
 
-void CAN_Tx(uint8_t length, uint8_t Data[length], uint32_t ID, CAN_TypeDef* CANx){
+void CAN_Tx(uint8_t length, uint8_t data[length], uint32_t id){
+	uint8_t i;
+	CanTxMsg TxMessage = {0};
 
-	TxMessage.StdId = ID;
-	TxMessage.ExtId = 0x01;
+	TxMessage.StdId = id;
 	TxMessage.RTR = CAN_RTR_DATA;
 	TxMessage.IDE = CAN_ID_STD;
 	TxMessage.DLC = length;
 	for (i=0; i < length; i++)
-		TxMessage.Data[i]=(uint8_t) Data[i];
+		TxMessage.Data[i]= (uint8_t) data[i];
 
-	CAN_Transmit(CANx, &TxMessage);
+	CAN_Transmit(CAN2, &TxMessage);
 }
 
 
@@ -156,24 +147,6 @@ void CAN_Manage_Rx(CanRxMsg RxMessage)
 	//		TTabHigh = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
 	//	}
 
-
-}
-
-
-void CAN_BMS_Manage_Rx(CanRxMsg RxMessage)
-{
-	//	if(RxMessage.StdId == BMS_PACK_ID)
-	//	{
-	//		bus_state = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		IPackMsr = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//		SoCMsr 	 = (RxMessage.Data[5] << 8) | RxMessage.Data[4];
-	//	}
-	//	else if(RxMessage.StdId == BMS_TTAB_ID)
-	//	{
-	//		TTabAvg  = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		TTabHigh = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//	}
-	//
 
 }
 

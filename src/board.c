@@ -472,7 +472,7 @@ void Init_Board(){
 	#error "No board specified"
 #endif
 
-	CAN_init();
+	CAN_Config();
 	ADC_Config();
 	DMA_Config();
 }
