@@ -23,14 +23,17 @@
 		__set_PRIMASK(old_primask);				\
 	} while (0)
 
-/*TODO OVR restart DMA transactions,
- * vengono disabilitate automaticamente, tocca farle ripartire
- * pag 400 RM0090
-*/
-//TODO EOC
-//TODO AWD
+void PVD_IRQHandler(void);
 
-// TODO DMA_IRQ_Handler
+
+void ADC_IRQHandler(void);
+
+
+void DMA2_Stream0_IRQHandler(void);
+
+void CAN2_TX_IRQHandler(void);
+
+void CAN2_RX0_IRQHandler(void);
 
 #ifdef __cplusplus
 }
