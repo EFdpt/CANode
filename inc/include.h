@@ -22,9 +22,8 @@
 
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
-#include "stm32f4xx_it.h"
 #include "can.h"
-#include "rcc.h"
+//#include "rcc.h"
 #include "board.h"
 #include "adc.h"
 #include "dma.h"

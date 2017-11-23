@@ -9,19 +9,29 @@
 #define INTERRUPT_H_
 
 #ifdef __cplusplus
-	extern "C" {
+extern "C" {
 #endif
 
 #include "include.h"
 
+void NMI_Handler(void);
+void HardFault_Handler(void);
+void MemManage_Handler(void);
+void BusFault_Handler(void);
+void UsageFault_Handler(void);
+void SVC_Handler(void);
+void DebugMon_Handler(void);
+void PendSV_Handler(void);
+void SysTick_Handler(void);
+
 #define ATOMIC() do {							\
 		uint32_t old_primask = __get_PRIMASK(); \
 		__disable_irq();						\
-	} while (0)
+} while (0)
 
 #define END_ATOMIC() do {						\
 		__set_PRIMASK(old_primask);				\
-	} while (0)
+} while (0)
 
 void PVD_IRQHandler(void);
 
