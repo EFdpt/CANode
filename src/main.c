@@ -40,7 +40,7 @@ void SysTick_Handler(void){
 	data[2] = (uint8_t)TTabHigh;
 	data[3] = (uint8_t)(TTabHigh >> 8);
 
-	CAN_Tx(4, data, 0x123, CAN2);
+	CAN_Tx(4, data, 0x123);
 
 
 	/*accende e spegne l'uscita sul pin23 in base alla tensione presente sul pin7*/

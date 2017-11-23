@@ -25,14 +25,23 @@
 	__IO uint16_t* TPS2_DATA = BUFFER_DATA + 1;
 	__IO uint16_t* BRAKE_DATA = BUFFER_DATA + 2;
 
+	__IO uint16_t tps1_value;
+	__IO uint16_t tps2_value;
+	__IO uint16_t brake_value;
+
 #elif defined(_RT_DX) || defined(_RT_SX)
 
 	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
+
+	__IO uint16_t susp_value;
 
 #elif defined(_FR_DX)
 
 	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
 	__IO uint16_t* STEER_DATA = BUFFER_DATA + 1;
+
+	__IO uint16_t susp_value;
+	__IO uint16_t steer_value;
 
 #elif defined(_FR_SX)
 
@@ -40,12 +49,21 @@
 	__IO uint16_t* PRESS2_DATA = BUFFER_DATA + 1;
 	__IO uint16_t* SUSP_DATA = BUFFER_DATA + 2;
 
+	__IO uint16_t press1_value;
+	__IO uint16_t press2_value;
+	__IO uint16_t susp_value;
+
 #elif defined(_COG)
 
 	__IO uint16_t* ACCX_DATA = BUFFER_DATA;
 	__IO uint16_t* ACCY_DATA = BUFFER_DATA + 1;
 	__IO uint16_t* ACCZ_DATA = BUFFER_DATA + 2;
 	__IO uint16_t* GYRO_DATA = BUFFER_DATA + 3;
+
+	__IO uint16_t accx_value;
+	__IO uint16_t accy_value;
+	__IO uint16_t accz_value;
+	__IO uint16_t gyro_value;
 
 #endif
 
@@ -67,7 +85,8 @@
   */
 void DMA_Config() {
 
-#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
+	defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
 
 	// allocate DMA structure and init it to zero
 	DMA_InitTypeDef 	DMA_InitStructure = {0};
@@ -141,7 +160,5 @@ void DMA_Config() {
 	if (!timeout) {
 	    for (;;) { }
 	}
-#else
-
 #endif
 }

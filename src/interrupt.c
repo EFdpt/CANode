@@ -45,6 +45,7 @@ void CAN2_TX_IRQHandler(void){
 
 //TODO
 void CAN2_RX0_IRQHandler(void){
+#if 0
 	extern uint32_t potVCU;
 
 	CanRxMsg RxMessage;
@@ -82,4 +83,16 @@ void CAN2_RX0_IRQHandler(void){
 		//		}
 	}
 	else CAN_Manage_Rx(RxMessage);
+#endif
 }
+
+/*
+void TIM3_IRQHandler(void){
+
+	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET) {
+		Data[0] = 0xAA;
+		CAN_Tx(8, Data, STAR_ID, CAN);
+	}
+
+	TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
+}*/

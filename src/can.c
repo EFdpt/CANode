@@ -8,6 +8,10 @@
 #include "can.h"
 
 void CAN_Config() {
+
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
+	defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+
 	NVIC_InitTypeDef  NVIC_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 	CAN_InitTypeDef	CAN_InitStructure;
@@ -34,53 +38,50 @@ void CAN_Config() {
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource5, GPIO_AF_CAN2);
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource6, GPIO_AF_CAN2);
 
-	// TODO: fin qui tutto bene
-
 	CAN_InitStructure.CAN_TTCM = DISABLE;
 	CAN_InitStructure.CAN_ABOM = ENABLE;
 	CAN_InitStructure.CAN_AWUM = DISABLE;
 	CAN_InitStructure.CAN_NART = ENABLE;	//abilitazione ritrasmissione NON automatica
 	CAN_InitStructure.CAN_RFLM = DISABLE;
 	CAN_InitStructure.CAN_TXFP = DISABLE;
-	CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
+	CAN_InitStructure.CAN_Mode = CAN_OperatingMode_Normal;
+
+	// TODO: fin qui tutto bene
+
 	CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
 	CAN_InitStructure.CAN_BS1 = CAN_BS1_14tq;
 	CAN_InitStructure.CAN_BS2 = CAN_BS2_6tq;
 	CAN_InitStructure.CAN_Prescaler = 2;//1Mb/s
 	CAN_Init(CAN2, &CAN_InitStructure);
+
+	//SYSCLK = 168MHz, HCLK = 168MHz, PCLK1 = 42MHz, PCLK2 = 84MHz
+
 	/*
 	 * CAN BaudRate = 1/NominalBitTime
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
 	 *  */
 
-#ifdef _TEST_UP
-		CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
-		CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-		CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_16bit; //32
-		CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-		CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
-		CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-		CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x00ff; //0000
-		CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-		CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-		CAN_FilterInit(&CAN_FilterInitStructure);
+	CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
+	CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
+	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_16bit; //32
+	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
+	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x00ff; //0000
+	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
+	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+	CAN_FilterInit(&CAN_FilterInitStructure);
 
-		CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
+	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
 
-		NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
 
-		NVIC_InitStructure.NVIC_IRQChannel = CAN2_RX0_IRQn;
-		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-		NVIC_Init(&NVIC_InitStructure);
-
-
-#elif defined (_CRUSCOTTO) || defined (_FR_DX) || defined (_FR_SX) || defined (_RT_DX )|| defined(_RT_SX) || defined(_BATTERIA) || defined(_TEST_DOWN)
-
-
+	NVIC_InitStructure.NVIC_IRQChannel = CAN2_RX0_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 #endif
-
 
 }
 
@@ -98,46 +99,6 @@ void CAN_Tx(uint8_t length, uint8_t data[length], uint32_t id){
 	CAN_Transmit(CAN2, &TxMessage);
 }
 
-
-void CAN2_RX0_IRQHandler(void){
-
-	CanRxMsg RxMessage;
-
-	CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
-
-
-	if(RxMessage.StdId == May12)
-	{
-		potVCU = RxMessage.Data[0];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[1];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[2];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[3];
-		potVCU<<=8;
-		if (potVCU > 0xff0a)
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
-		else
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
-
-
-
-		//		switch (bus_state){
-		//		//disabilita timer per l'invio di pacchetti
-		//		case 0:
-		//			if(bus_state) TIM_Cmd (TIM2, DISABLE);
-		//			break;
-		//
-		//			//abilita il timer per l'invio di pacchetti
-		//		case 1:
-		//			if (!bus_state)	TIM_Cmd (TIM2, ENABLE);
-		//			break;
-		//		}
-	}
-	else CAN_Manage_Rx(RxMessage);
-}
-
 void CAN_Manage_Rx(CanRxMsg RxMessage)
 {
 
@@ -150,8 +111,8 @@ void CAN_Manage_Rx(CanRxMsg RxMessage)
 
 }
 
-uint8_t CAN_StatusControl(CAN_TypeDef* CANx)
-{
+uint8_t CAN_StatusControl(CAN_TypeDef* CANx) {
+#if 0
 	uint8_t CAN_LastErrorCode = CAN_GetLastErrorCode(CANx);
 	uint8_t CAN_TEC = CAN_GetLSBTransmitErrorCounter(CANx);
 	uint8_t CAN_REC = CAN_GetReceiveErrorCounter(CANx);
@@ -169,6 +130,8 @@ uint8_t CAN_StatusControl(CAN_TypeDef* CANx)
 	CAN_ClearFlag(CANx, CAN_FLAG_EWG);
 
 	return CAN_ErrorCode_NoErr;
+#endif
+	return 0;
 }
 
 void CAN_DisableFilter(uint8_t CAN_FilterNum)
