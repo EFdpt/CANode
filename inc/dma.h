@@ -29,6 +29,10 @@
 	extern __IO uint16_t* TPS2_DATA;
 	extern __IO uint16_t* BRAKE_DATA;
 
+	extern __IO uint16_t tps1_value;
+	extern __IO uint16_t tps2_value;
+	extern __IO uint16_t brake_value;
+
 #elif defined(_RT_DX) || defined(_RT_SX)
 
 	#define DMA_STREAM			DMA2_Stream0
@@ -39,6 +43,8 @@
 	#define ADC_SCAN_NUM		1
 
 	extern __IO uint16_t* SUSP_DATA;
+
+	extern __IO uint16_t susp_value;
 
 #elif defined(_FR_DX)
 
@@ -51,6 +57,9 @@
 
 	extern __IO uint16_t* SUSP_DATA;
 	extern __IO uint16_t* STEER_DATA;
+
+	extern __IO uint16_t susp_value;
+	extern __IO uint16_t steer_value;
 
 #elif defined(_FR_SX)
 
@@ -65,6 +74,10 @@
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
 
+	extern __IO uint16_t press1_value;
+	extern __IO uint16_t press2_value;
+	extern __IO uint16_t susp_value;
+
 #elif defined(_COG) || defined(_TEST_UP)
 
 	#define DMA_STREAM			DMA2_Stream0
@@ -78,6 +91,11 @@
 	extern __IO uint16_t* ACCY_DATA;
 	extern __IO uint16_t* ACCZ_DATA;
 	extern __IO uint16_t* GYRO_DATA;
+
+	extern __IO uint16_t accx_value;
+	extern __IO uint16_t accy_value;
+	extern __IO uint16_t accz_value;
+	extern __IO uint16_t gyro_value;
 
 #elif defined(_CRUSCOTTO) || defined(_BATTERIA) || defined(_TEST_DOWN)
 
