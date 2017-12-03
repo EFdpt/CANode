@@ -7,6 +7,9 @@
 
 #include "can.h"
 
+CanTxMsg tx_msg = {0};
+CanRxMsg rx_msg = {0};
+
 void CAN_Config() {
 
 #if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
@@ -61,13 +64,29 @@ void CAN_Config() {
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
 	 *  */
 
-	CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
+	/*
+	 * Filter bank = 0, filter number = 2 -> 32bit mask
+	*/
+	CAN_FilterInitStructure.CAN_FilterNumber = 2; // o 9 se 16bit
+
+	/**
+	 * CAN_FM1R -> FBMx = 0
+	 */
 	CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_16bit; //32
+
+	/**
+	 * id mask a 32bit
+	 */
+	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit; //32
+
+	// TODO
 	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
 	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-	CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x00ff; //0000
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) VCU_EVENT_ID; //0000
+
+	// end TODO
+
 	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
 	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
 	CAN_FilterInit(&CAN_FilterInitStructure);
@@ -99,8 +118,8 @@ void CAN_Tx(uint8_t length, uint8_t data[length], uint32_t id){
 	CAN_Transmit(CAN2, &TxMessage);
 }
 
-void CAN_Manage_Rx(CanRxMsg RxMessage)
-{
+void CAN_Manage_Rx(CanRxMsg* RxMessage) {
+
 
 	//	else if(RxMessage.StdId == BMS_TTAB_ID)
 	//	{

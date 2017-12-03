@@ -28,6 +28,6 @@ void CAN_Config();
 
 void CAN_Tx(uint8_t lenght, uint8_t data[lenght], uint32_t id);
 
-void CAN_Manage_Rx(CanRxMsg RxMessage);
+void CAN_Manage_Rx(CanRxMsg* RxMessage);
 
 #endif /* CAN_H_ */
