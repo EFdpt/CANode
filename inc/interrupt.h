@@ -24,10 +24,10 @@ void DebugMon_Handler(void);
 void PendSV_Handler(void);
 void SysTick_Handler(void);
 
-#define ATOMIC() do {							\
+#define ATOMIC() 								\
 		uint32_t old_primask = __get_PRIMASK(); \
-		__disable_irq();						\
-} while (0)
+		__disable_irq()
+
 
 #define END_ATOMIC() do {						\
 		__set_PRIMASK(old_primask);				\

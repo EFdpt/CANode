@@ -1,4 +1,5 @@
 #include "interrupt.h"
+#include "filter.h"
 
 	/*	TODO
 	 * PVD interrupt monitora la tensione di alimentazione
@@ -35,6 +36,19 @@ void ADC_IRQHandler(void){
 // TODO
 void DMA2_Stream0_IRQHandler() {
 
+	// TODO: check which DMA FIFO is used
+	if(DMA_GetITStatus(DMA_STREAM, DMA_IT_TCIF0)) {
+
+		ATOMIC();
+
+		// filted transferred data and update current values
+		filter_data();
+
+		END_ATOMIC();
+
+		/* Clear DMA Stream Transfer Complete interrupt pending bit */
+	    DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_TCIF0);
+	}
 }
 
 
