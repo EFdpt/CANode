@@ -13,16 +13,16 @@
 /**
  * 	packets ID
  */
-#define VCU_EVENT_ID		(0x00000022)
-
-#define FR_DX_ID			(0x00000001)
-#define FR_SX_ID			(0x00000002)
-#define RT_DX_ID			(0x00000004)
-#define RT_SX_ID			(0x00000008)
-#define CRUSCOTTO_ID		(0x00000010)
-#define BATTERIA_ID			(0x00000020)
-#define PEDALI_ID			(0x00000040)
-#define COG_ID				(0x00000080)
+#define VCU_STATE_ID		(0x20)
+#define TIME_SLOT			(0x15)
+#define FR_DX_ID			(0x50)
+#define FR_SX_ID			(0x30)
+#define RT_DX_ID			(0x60)
+#define RT_SX_ID			(0x40)
+#define CRUSCOTTO_ID		(0x25)
+#define BATTERIA_ID			(0x35)
+#define PEDALI_ID			(0x10)
+#define COG_ID				(0x70)
 
 void CAN_Config();
 

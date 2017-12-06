@@ -15,20 +15,20 @@ void PVD_IRQHandler(void){
  * bisogna controllare quale flag è stato asserita per capire cosa è successo
  *TODO OVR, EOC, AWD*/
 void ADC_IRQHandler(void){
-	if(ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)==SET){
+	if(ADC_GetITStatus(ADC1,ADC_IT_EOC)!=RESET){
 		//do something alla fine della conversione
 
-		ADC_ClearFlag (ADC1,ADC_FLAG_EOC);
+		ADC_ClearITPendingBit(ADC1,ADC_IT_EOC);
 	}
-	else if(ADC_GetFlagStatus(ADC1,ADC_FLAG_AWD)==SET){
+	else if(ADC_GetITStatus(ADC1,ADC_IT_AWD)!=RESET){
 		//un regular channel è andato oltre le soglie
 
-		ADC_ClearFlag (ADC1,ADC_FLAG_AWD);
+		ADC_ClearITPendingBit(ADC1,ADC_IT_AWD);
 	}
-	else if(ADC_GetFlagStatus(ADC1,ADC_FLAG_OVR)==SET){
+	else if(ADC_GetITStatus(ADC1,ADC_IT_OVR)!=RESET){
 		//l'ADC1 è andato in OVERRUN!! DMA disabilitate, tocca farle ripartire pag 400 RM0090
 
-		ADC_ClearFlag (ADC1,ADC_FLAG_OVR);
+		ADC_ClearITPendingBit(ADC1,ADC_IT_OVR);
 	}
 
 }
@@ -100,13 +100,13 @@ void CAN2_RX0_IRQHandler(void){
 #endif
 }
 
-/*
+
 void TIM3_IRQHandler(void){
 
 	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET) {
 		Data[0] = 0xAA;
-		CAN_Tx(8, Data, STAR_ID, CAN);
+		CAN_Tx(pack.length, pack.Data, pack.ID);
 	}
 
 	TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
-}*/
+}
