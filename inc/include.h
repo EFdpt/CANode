@@ -9,13 +9,13 @@
 #define INCLUDE_H_
 
 // define here which board to use
-//#define _FR_DX
+#define _FR_DX
 //#define _FR_SX
 //#define _RT_DX
 //#define _RT_SX
 //#define _CRUSCOTTO
 //#define _BATTERIA
-#define _PEDALI
+//#define _PEDALI
 //#define _TEST_DOWN
 //#define _TEST_UP
 //#define _COG

@@ -1,4 +1,5 @@
 #include "interrupt.h"
+#include "dma.h"
 #include "filter.h"
 
 	/*	TODO
@@ -39,15 +40,14 @@ void DMA2_Stream0_IRQHandler() {
 	// TODO: check which DMA FIFO is used
 	if(DMA_GetITStatus(DMA_STREAM, DMA_IT_TCIF0)) {
 
-		ATOMIC();
-
-		// filted transferred data and update current values
-		filter_data();
-
-		END_ATOMIC();
+		// all data have been transfered by DMA so now copy to sensor's buffers
+		copy_to_buffers();
 
 		/* Clear DMA Stream Transfer Complete interrupt pending bit */
 	    DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_TCIF0);
+
+	    // filter acquired data
+	    filter_data();
 	}
 }
 
@@ -100,7 +100,7 @@ void CAN2_RX0_IRQHandler(void){
 #endif
 }
 
-
+/*
 void TIM3_IRQHandler(void){
 
 	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET) {
@@ -109,4 +109,4 @@ void TIM3_IRQHandler(void){
 	}
 
 	TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
-}
+}*/

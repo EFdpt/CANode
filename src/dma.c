@@ -21,9 +21,9 @@
 // set data pointers to different offsets from internal buffer's base address
 #if defined(_PEDALI)
 
-	__IO uint16_t* TPS1_DATA = BUFFER_DATA;
-	__IO uint16_t* TPS2_DATA = BUFFER_DATA + 1;
-	__IO uint16_t* BRAKE_DATA = BUFFER_DATA + 2;
+	__IO uint16_t TPS1_DATA[BUFFER_SIZE];
+	__IO uint16_t _TPS2_DATA[BUFFER_SIZE];
+	__IO uint16_t _BRAKE_DATA[BUFFER_SIZE];
 
 	__IO uint16_t tps1_value = 0;
 	__IO uint16_t tps2_value = 0;
@@ -31,23 +31,23 @@
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
+	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
 
 	__IO uint16_t susp_value = 0;
 
 #elif defined(_FR_DX)
 
-	__IO uint16_t* SUSP_DATA = BUFFER_DATA;
-	__IO uint16_t* STEER_DATA = BUFFER_DATA + 1;
+	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
+	__IO uint16_t STEER_DATA[BUFFER_SIZE];
 
 	__IO uint16_t susp_value = 0;
 	__IO uint16_t steer_value = 0;
 
 #elif defined(_FR_SX)
 
-	__IO uint16_t* PRESS1_DATA = BUFFER_DATA;
-	__IO uint16_t* PRESS2_DATA = BUFFER_DATA + 1;
-	__IO uint16_t* SUSP_DATA = BUFFER_DATA + 2;
+	__IO uint16_t PRESS1_DATA[BUFFER_SIZE];
+	__IO uint16_t PRESS2_DATA[BUFFER_SIZE];
+	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
 
 	__IO uint16_t press1_value = 0;
 	__IO uint16_t press2_value = 0;
@@ -55,10 +55,10 @@
 
 #elif defined(_COG)
 
-	__IO uint16_t* ACCX_DATA = BUFFER_DATA;
-	__IO uint16_t* ACCY_DATA = BUFFER_DATA + 1;
-	__IO uint16_t* ACCZ_DATA = BUFFER_DATA + 2;
-	__IO uint16_t* GYRO_DATA = BUFFER_DATA + 3;
+	__IO uint16_t ACCX_DATA[BUFFER_SIZE];
+	__IO uint16_t ACCY_DATA[BUFFER_SIZE];
+	__IO uint16_t ACCZ_DATA[BUFFER_SIZE];
+	__IO uint16_t GYRO_DATA[BUFFER_SIZE];
 
 	__IO uint16_t accx_value = 0;
 	__IO uint16_t accy_value = 0;
@@ -160,5 +160,52 @@ void DMA_Config() {
 	if (!timeout) {
 	    for (;;) { }
 	}
+#endif
+}
+
+void copy_to_buffers() {
+
+	int i = 0;
+
+#if defined(_PEDALI)
+
+	for (; i < BUFFER_SIZE; i++) {
+		TPS1_DATA[i] = BUFFER_DATA[pos(i)];
+		TPS2_DATA[i] = BUFFER_DATA[pos(i) + 1];
+		BRAKE_DATA[i] = BUFFER_DATA[pos(i) + 2];
+	}
+
+#elif defined(_RT_DX) || defined(_RT_SX)
+
+	memcpy(SUSP_DATA, BUFFER_DATA, BUFFER_SIZE);
+
+#elif defined(_FR_DX)
+
+	for (; i < BUFFER_SIZE; i++) {
+		SUSP_DATA[i] = BUFFER_DATA[pos(i)];
+		STEER_DATA[i] = BUFFER_DATA[pos(i) + 1];
+	}
+
+#elif defined(_FR_SX)
+
+	for (; i < BUFFER_SIZE; i++) {
+		PRESS1_DATA[i] = BUFFER_DATA[pos(i)];
+		PRESS2_DATA[i] = BUFFER_DATA[pos(i) + 1];
+		SUSP_DATA[i] = BUFFER_DATA[pos(i) + 2];
+	}
+
+	__IO uint16_t press1_value = 0;
+	__IO uint16_t press2_value = 0;
+	__IO uint16_t susp_value = 0;
+
+#elif defined(_COG)
+
+	for (; i < BUFFER_SIZE; i++) {
+		ACCX_DATA[i] = BUFFER_DATA[pos(i)];
+		ACCY_DATA[i] = BUFFER_DATA[pos(i) + 1];
+		ACCZ_DATA[i] = BUFFER_DATA[pos(i) + 2];
+		GYRO_DATA[i] = BUFFER_DATA[pos(i) + 3];
+	}
+
 #endif
 }

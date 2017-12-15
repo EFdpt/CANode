@@ -16,10 +16,15 @@
 
 #define SORT_ORDER_INCREASING	(1)
 
-/* Sorting algorithm based on heapsort.
- *
+/*
+ * Sorting algorithm
  */
-void heapsort(uint16_t* arr, unsigned n, unsigned offset);
+void sort(uint16_t* arr, unsigned n);
+
+/*
+ * Sorting algorithm with offset indexing.
+ */
+void sort_off(uint16_t* arr, unsigned n, unsigned offset);
 
 #ifdef __cplusplus
 }

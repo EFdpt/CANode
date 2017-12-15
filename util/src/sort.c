@@ -48,7 +48,7 @@ static inline void build_heap(uint16_t* arr, unsigned n, unsigned offset) {
         heapify(arr, n, i, offset);
 }
 
-void heapsort(uint16_t* arr, unsigned n, unsigned offset) {
+static void heapsort(uint16_t* arr, unsigned n, unsigned offset) {
 	if (n == 0 || n == 1 || offset == 0 || (n / offset) < 2)
 		return;
 	int i;
@@ -59,4 +59,8 @@ void heapsort(uint16_t* arr, unsigned n, unsigned offset) {
         swap(arr, arr+i);
 		heapify(arr, i, 0, offset);
     }
+}
+
+void sort(uint16_t* arr, unsigned n) {
+	heapsort(arr, n, 0);
 }

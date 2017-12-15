@@ -83,7 +83,7 @@ void CAN_Config() {
 	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
 	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) VCU_EVENT_ID; //0000
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) TIME_SLOT; //0000
 
 	// end TODO
 
