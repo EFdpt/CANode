@@ -1,0 +1,12 @@
+<map id="Defines and Type Definitions" name="Defines and Type Definitions">
+<area shape="rect" id="node1" href="$d7/df6/group__CMSIS__TPI.html" title="Type definitions for the Trace Port Interface (TPI) " alt="" coords="261,5,399,47"/>
+<area shape="rect" id="node2" href="$d5/dea/group__CMSIS__CORE.html" title="Core Register type definitions. " alt="" coords="265,71,395,112"/>
+<area shape="rect" id="node3" href="$d7/d12/group__CMSIS__core__base.html" title="Definitions for base addresses, unions, and structures. " alt="" coords="272,137,388,163"/>
+<area shape="rect" id="node4" href="$d3/d5e/group__CMSIS__SysTick.html" title="Type definitions for the System Timer Registers. " alt="" coords="261,188,399,229"/>
+<area shape="rect" id="node5" href="$d1/dfe/group__CMSIS__NVIC.html" title="Type definitions for the NVIC Registers. " alt="" coords="244,253,416,295"/>
+<area shape="rect" id="node6" href="$d6/d64/group__CMSIS__SCnSCB.html" title="Type definitions for the System Control and ID Register not in the SCB. " alt="" coords="259,319,401,360"/>
+<area shape="rect" id="node7" href="$dd/d30/group__CMSIS__SCB.html" title="Type definitions for the System Control Block Registers. " alt="" coords="255,384,405,425"/>
+<area shape="rect" id="node8" href="$d9/db3/group__CMSIS__DWT.html" title="Type definitions for the Data Watchpoint and Trace (DWT) " alt="" coords="257,449,403,491"/>
+<area shape="rect" id="node9" href="$d1/d4e/group__CMSIS__CoreDebug.html" title="Cortex&#45;M0 Core Debug Registers (DCB registers, SHCSR, and DFSR) are only accessible over DAP and not ..." alt="" coords="254,515,406,556"/>
+<area shape="rect" id="node10" href="$d7/d2e/group__CMSIS__ITM.html" title="Type definitions for the Instrumentation Trace Macrocell (ITM) " alt="" coords="255,580,405,621"/>
+</map>

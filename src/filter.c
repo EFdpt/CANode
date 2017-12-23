@@ -14,6 +14,13 @@
 #define USE_LOOP_UNROLLING		(1)
 #define LOOP_UNROLLING_SIZE		(4)
 
+/**
+ *  @author		Arella Matteo
+ *  @brief		This function filters the input buffer with an average filter.
+ *  @param		buffer [in] The buffer to filter
+ *  @param		size [in] The size of the buffer
+ *  @retval		Filtered value
+ */
 static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
 
 	int start = FILTER_BOUND;
@@ -23,6 +30,8 @@ static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
 		divisor = 1;
 
 	volatile int index = start;
+
+	sort_off((uint16_t*) buffer, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #if USE_LOOP_UNROLLING
 	volatile long long sum1 = 0LL;
@@ -55,51 +64,38 @@ void filter_data() {
 
 #if defined(_PEDALI)
 
-	sort_off((uint16_t*) TPS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	tps1_value = filter_buffer((uint16_t*) TPS1_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) TPS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	tps2_value = filter_buffer((uint16_t*) TPS2_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) BRAKE_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	brake_value = filter_buffer((uint16_t*) BRAKE_DATA, BUFFER_SIZE);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
 #elif defined(_FR_DX)
 
-	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) STEER_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	steer_value = filter_buffer((uint16_t*) STEER_DATA, BUFFER_SIZE);
 
 #elif defined(_FR_SX)
 
-	sort_off((uint16_t*) PRESS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	press1_value = filter_buffer((uint16_t*) PRESS1_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) PRESS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	press2_value = filter_buffer((uint16_t*) PRESS2_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
 #elif defined(_COG)
 
-	sort_off((uint16_t*) ACCX_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	accx_value = filter_buffer((uint16_t*) ACCX_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) ACCY_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	accy_value = filter_buffer((uint16_t*) ACCY_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) ACCZ_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	accz_value = filter_buffer((uint16_t*) ACCZ_DATA, BUFFER_SIZE);
 
-	sort_off((uint16_t*) GYRO_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 	gyro_value = filter_buffer((uint16_t*) GYRO_DATA, BUFFER_SIZE);
 
 #endif

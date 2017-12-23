@@ -1,0 +1,6 @@
+<map id="DAC_Private_Functions" name="DAC_Private_Functions">
+<area shape="rect" id="node3" href="$db/d97/group__DAC__Group1.html" title="DAC channels configuration: trigger, output buffer, data format. " alt="" coords="316,5,501,32"/>
+<area shape="rect" id="node4" href="$df/d29/group__DAC__Group2.html" title="DMA management functions. " alt="" coords="315,56,503,83"/>
+<area shape="rect" id="node5" href="$d2/dd7/group__DAC__Group3.html" title="Interrupts and flags management functions. " alt="" coords="329,107,488,149"/>
+<area shape="rect" id="node2" href="$df/d89/group__DAC.html" title="DAC driver modules. " alt="" coords="5,56,56,83"/>
+</map>

@@ -1,0 +1,10 @@
+<map id="SDIO_Private_Functions" name="SDIO_Private_Functions">
+<area shape="rect" id="node3" href="$d5/d4d/group__SDIO__Group1.html" title="Initialization and Configuration functions. " alt="" coords="347,5,507,47"/>
+<area shape="rect" id="node4" href="$d1/d45/group__SDIO__Group2.html" title="Command path state machine (CPSM) management functions. " alt="" coords="325,71,530,127"/>
+<area shape="rect" id="node5" href="$d2/d65/group__SDIO__Group3.html" title="Data path state machine (DPSM) management functions. " alt="" coords="323,152,532,193"/>
+<area shape="rect" id="node6" href="$d9/d8f/group__SDIO__Group4.html" title="SDIO IO Cards mode management functions. " alt="" coords="348,217,507,259"/>
+<area shape="rect" id="node7" href="$d2/db2/group__SDIO__Group5.html" title="CE&#45;ATA mode management functions. " alt="" coords="334,283,521,324"/>
+<area shape="rect" id="node8" href="$d4/d94/group__SDIO__Group6.html" title="DMA transfers management functions. " alt="" coords="334,348,521,389"/>
+<area shape="rect" id="node9" href="$d6/d88/group__SDIO__Group7.html" title="Interrupts and flags management functions. " alt="" coords="348,413,507,455"/>
+<area shape="rect" id="node2" href="$db/d9d/group__SDIO.html" title="SDIO driver modules. " alt="" coords="5,225,60,251"/>
+</map>

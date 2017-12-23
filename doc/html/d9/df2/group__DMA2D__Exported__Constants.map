@@ -1,0 +1,15 @@
+<map id="DMA2D_Exported_Constants" name="DMA2D_Exported_Constants">
+<area shape="rect" id="node1" href="$d7/d85/group__DMA2D__FGCM.html" title="DMA2D_FGCM" alt="" coords="407,5,522,32"/>
+<area shape="rect" id="node2" href="$d4/d0d/group__DMA2D__Interrupts.html" title="DMA2D_Interrupts" alt="" coords="399,56,530,83"/>
+<area shape="rect" id="node3" href="$dc/dc5/group__DMA2D__OUTPUT__OFFSET.html" title="DMA2D_OUTPUT_OFFSET" alt="" coords="369,107,560,133"/>
+<area shape="rect" id="node4" href="$da/d5d/group__DMA2D__OFFSET.html" title="DMA2D_OFFSET" alt="" coords="401,157,529,184"/>
+<area shape="rect" id="node5" href="$df/d2b/group__DMA2D__FG__COLOR__VALUE.html" title="DMA2D_FG_COLOR_VALUE" alt="" coords="365,208,564,235"/>
+<area shape="rect" id="node6" href="$d8/da5/group__DMA2D__SIZE.html" title="DMA2D_SIZE" alt="" coords="411,259,518,285"/>
+<area shape="rect" id="node7" href="$dc/ded/group__DMA2D__Flag.html" title="DMA2D_Flag" alt="" coords="414,309,515,336"/>
+<area shape="rect" id="node8" href="$d2/d80/group__DMA2D__MODE.html" title="DMA2D_MODE" alt="" coords="407,360,523,387"/>
+<area shape="rect" id="node9" href="$d2/d53/group__DMA2D__CMODE.html" title="DMA2D_CMODE" alt="" coords="401,411,528,437"/>
+<area shape="rect" id="node10" href="$da/d30/group__DMA2D__OUTPUT__COLOR.html" title="DMA2D_OUTPUT_COLOR" alt="" coords="372,461,557,488"/>
+<area shape="rect" id="node11" href="$d6/d4e/group__DMA2D.html" title="DMA2D driver modules. " alt="" coords="5,284,75,311"/>
+<area shape="rect" id="node13" href="$da/d76/group__DMA2D__DeadTime.html" title="DMA2D_DeadTime" alt="" coords="397,512,533,539"/>
+<area shape="rect" id="node14" href="$d1/d6d/group__DMA2D__FG__CLUT__CM.html" title="DMA2D_FG_CLUT_CM" alt="" coords="383,563,547,589"/>
+</map>

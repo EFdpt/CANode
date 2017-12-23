@@ -1,0 +1,12 @@
+<map id="DAC_Exported_Constants" name="DAC_Exported_Constants">
+<area shape="rect" id="node1" href="$dc/deb/group__DAC__lfsrunmask__triangleamplitude.html" title="DAC_lfsrunmask_triangleamplitude" alt="" coords="329,5,556,32"/>
+<area shape="rect" id="node2" href="$df/d6f/group__DAC__flags__definition.html" title="DAC_flags_definition" alt="" coords="370,56,515,83"/>
+<area shape="rect" id="node3" href="$db/d67/group__DAC__output__buffer.html" title="DAC_output_buffer" alt="" coords="375,107,510,133"/>
+<area shape="rect" id="node4" href="$d3/d4c/group__DAC__Channel__selection.html" title="DAC_Channel_selection" alt="" coords="360,157,525,184"/>
+<area shape="rect" id="node5" href="$da/dd1/group__DAC__wave__generation.html" title="DAC_wave_generation" alt="" coords="365,208,521,235"/>
+<area shape="rect" id="node6" href="$de/d4a/group__DAC__data.html" title="DAC_data" alt="" coords="401,259,484,285"/>
+<area shape="rect" id="node7" href="$df/d89/group__DAC.html" title="DAC driver modules. " alt="" coords="5,208,56,235"/>
+<area shape="rect" id="node8" href="$d0/d41/group__DAC__data__alignement.html" title="DAC_data_alignement" alt="" coords="366,309,519,336"/>
+<area shape="rect" id="node9" href="$db/db9/group__DAC__interrupts__definition.html" title="DAC_interrupts_definition" alt="" coords="357,360,528,387"/>
+<area shape="rect" id="node11" href="$dc/dae/group__DAC__trigger__selection.html" title="DAC_trigger_selection" alt="" coords="366,411,519,437"/>
+</map>
