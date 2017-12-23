@@ -6,6 +6,8 @@
  */
 
 #include "can.h"
+#include "dma.h"
+#include "util/inc/net.h"
 
 CanTxMsg tx_msg = {0};
 CanRxMsg rx_msg = {0};
@@ -19,6 +21,10 @@ void CAN_Config() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	CAN_InitTypeDef	CAN_InitStructure;
 	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
+
+	tx_msg.ExtId = CAN_ID;
+	tx_msg.IDE = CAN_Id_Extended;
+	tx_msg.RTR = CAN_RTR_DATA;
 
 	/* Using CAN2 but for the fact CAN2 is slave CAN1 clock must be enabled too */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2 | RCC_APB1Periph_CAN1, ENABLE);
@@ -83,7 +89,7 @@ void CAN_Config() {
 	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
 	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) TIME_SLOT; //0000
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) VCU_TIME_SLOT; //0000
 
 	// end TODO
 
@@ -104,18 +110,46 @@ void CAN_Config() {
 
 }
 
-void CAN_Tx(uint8_t length, uint8_t data[length], uint32_t id){
-	uint8_t i;
-	CanTxMsg TxMessage = {0};
+void CAN_pack_data() {
+#if defined(_PEDALI)
 
-	TxMessage.StdId = id;
-	TxMessage.RTR = CAN_RTR_DATA;
-	TxMessage.IDE = CAN_ID_STD;
-	TxMessage.DLC = length;
-	for (i=0; i < length; i++)
-		TxMessage.Data[i]= (uint8_t) data[i];
+	tx_msg.DLC = 6;
+	*((uint16_t*) tx_msg.Data) = serializes(tps1_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(tps2_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(brake_data);
 
-	CAN_Transmit(CAN2, &TxMessage);
+#elif defined(_RT_DX) || defined(_RT_SX)
+
+	tx_msg.DLC = 2;
+	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
+
+#elif defined(_FR_DX)
+
+	tx_msg.DLC = 4;
+	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(steer_value);
+
+#elif defined(_FR_SX)
+
+	tx_msg.DLC = 6;
+	*((uint16_t*) tx_msg.Data) = serializes(press1_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(press2_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(susp_value);
+
+
+#elif defined(_COG) || defined(_TEST_UP)
+
+	tx_msg.DLC = 8;
+	*((uint16_t*) tx_msg.Data) = serializes(accx_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(accy_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(accz_value);
+	((uint16_t*) tx_msg.Data)[3] = serializes(gyro_value);
+
+#endif
+}
+
+void CAN_Tx() {
+	CAN_Transmit(CAN2, &tx_msg);
 }
 
 void CAN_Manage_Rx(CanRxMsg* RxMessage) {

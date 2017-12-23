@@ -6,6 +6,7 @@
  */
 
 #include "dma.h"
+#include <string.h>
 
 #define TIMEOUT_MAX				 (10000)
 
@@ -15,15 +16,19 @@
 	#define BUFFER_CAPACITY		(BUFFER_SIZE * ADC_SCAN_NUM)
 
 	__IO uint16_t BUFFER_DATA[BUFFER_CAPACITY] = {0};
+	__IO uint16_t DOUBLE_BUFFER_DATA[BUFFER_CAPACITY] = {0};
+
+	// the buffer with transferred data
+	__IO uint16_t DEST_BUFFER[BUFFER_CAPACITY] = {0};
 
 #endif
 
 // set data pointers to different offsets from internal buffer's base address
 #if defined(_PEDALI)
 
-	__IO uint16_t TPS1_DATA[BUFFER_SIZE];
-	__IO uint16_t _TPS2_DATA[BUFFER_SIZE];
-	__IO uint16_t _BRAKE_DATA[BUFFER_SIZE];
+	__IO uint16_t* TPS1_DATA = DEST_BUFFER;
+	__IO uint16_t* TPS2_DATA = DEST_BUFFER + 1;
+	__IO uint16_t* BRAKE_DATA = DEST_BUFFER + 2;
 
 	__IO uint16_t tps1_value = 0;
 	__IO uint16_t tps2_value = 0;
@@ -31,23 +36,23 @@
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
+	__IO uint16_t* SUSP_DATA = DEST_BUFFER;
 
 	__IO uint16_t susp_value = 0;
 
 #elif defined(_FR_DX)
 
-	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
-	__IO uint16_t STEER_DATA[BUFFER_SIZE];
+	__IO uint16_t* SUSP_DATA = DEST_BUFFER;
+	__IO uint16_t* STEER_DATA = DEST_BUFFER + 1;
 
 	__IO uint16_t susp_value = 0;
 	__IO uint16_t steer_value = 0;
 
 #elif defined(_FR_SX)
 
-	__IO uint16_t PRESS1_DATA[BUFFER_SIZE];
-	__IO uint16_t PRESS2_DATA[BUFFER_SIZE];
-	__IO uint16_t SUSP_DATA[BUFFER_SIZE];
+	__IO uint16_t* PRESS1_DATA = DEST_BUFFER;
+	__IO uint16_t* PRESS2_DATA = DEST_BUFFER + 1;
+	__IO uint16_t* SUSP_DATA = DEST_BUFFER + 2;
 
 	__IO uint16_t press1_value = 0;
 	__IO uint16_t press2_value = 0;
@@ -55,10 +60,10 @@
 
 #elif defined(_COG)
 
-	__IO uint16_t ACCX_DATA[BUFFER_SIZE];
-	__IO uint16_t ACCY_DATA[BUFFER_SIZE];
-	__IO uint16_t ACCZ_DATA[BUFFER_SIZE];
-	__IO uint16_t GYRO_DATA[BUFFER_SIZE];
+	__IO uint16_t* ACCX_DATA = DEST_BUFFER;
+	__IO uint16_t* ACCY_DATA = DEST_BUFFER + 1;
+	__IO uint16_t* ACCZ_DATA = DEST_BUFFER + 2;
+	__IO uint16_t* GYRO_DATA = DEST_BUFFER + 3;
 
 	__IO uint16_t accx_value = 0;
 	__IO uint16_t accy_value = 0;
@@ -144,6 +149,16 @@ void DMA_Config() {
 	/* enable DMA Transfer Complete interrupt */
 	DMA_ITConfig(DMA_STREAM, DMA_IT_TC, ENABLE);
 
+#if DOUBLE_BUFFER_MODE
+
+	// configure second buffer
+	DMA_DoubleBufferModeConfig(DMA_STREAM, (uint32_t) DOUBLE_BUFFER_DATA, DMA_Memory_0);
+
+	// enable double buffer mode
+	DMA_DoubleBufferModeCmd(DMA_STREAM, ENABLE);
+
+#endif
+
 	DMA_Cmd(DMA_STREAM, ENABLE);
 
 	// enable the DMA Stream IRQ Channel */
@@ -165,6 +180,17 @@ void DMA_Config() {
 
 void copy_to_buffers() {
 
+#if DOUBLE_BUFFER_MODE
+
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+
+	uint32_t source = DMA_GetCurrentMemoryTarget(DMA_STREAM);
+	memcpy((uint16_t*) DEST_BUFFER, (uint16_t*) (!source ? BUFFER_DATA : DOUBLE_BUFFER_DATA), BUFFER_SIZE);
+
+#endif
+
+#else /* double buffer mode disabled */
+
 	int i = 0;
 
 #if defined(_PEDALI)
@@ -177,7 +203,7 @@ void copy_to_buffers() {
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	memcpy(SUSP_DATA, BUFFER_DATA, BUFFER_SIZE);
+	memcpy((uint16_t*) SUSP_DATA, (uint16_t*) BUFFER_DATA, BUFFER_SIZE);
 
 #elif defined(_FR_DX)
 
@@ -194,10 +220,6 @@ void copy_to_buffers() {
 		SUSP_DATA[i] = BUFFER_DATA[pos(i) + 2];
 	}
 
-	__IO uint16_t press1_value = 0;
-	__IO uint16_t press2_value = 0;
-	__IO uint16_t susp_value = 0;
-
 #elif defined(_COG)
 
 	for (; i < BUFFER_SIZE; i++) {
@@ -206,6 +228,8 @@ void copy_to_buffers() {
 		ACCZ_DATA[i] = BUFFER_DATA[pos(i) + 2];
 		GYRO_DATA[i] = BUFFER_DATA[pos(i) + 3];
 	}
+
+#endif
 
 #endif
 }

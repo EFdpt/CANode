@@ -64,3 +64,7 @@ static void heapsort(uint16_t* arr, unsigned n, unsigned offset) {
 void sort(uint16_t* arr, unsigned n) {
 	heapsort(arr, n, 0);
 }
+
+void sort_off(uint16_t* arr, unsigned n, unsigned offset) {
+	heapsort(arr, n, offset);
+}

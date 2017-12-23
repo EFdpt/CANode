@@ -27,5 +27,6 @@
 #include "board.h"
 #include "adc.h"
 #include "dma.h"
+#include "tim.h"
 
 #endif /* INCLUDE_H_ */

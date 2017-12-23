@@ -35,7 +35,9 @@ void ADC_IRQHandler(void){
 }
 
 // TODO
-void DMA2_Stream0_IRQHandler() {
+#ifdef DMA_IRQHandler
+
+void DMA_IRQHandler() {
 
 	// TODO: check which DMA FIFO is used
 	if(DMA_GetITStatus(DMA_STREAM, DMA_IT_TCIF0)) {
@@ -50,63 +52,34 @@ void DMA2_Stream0_IRQHandler() {
 	    filter_data();
 	}
 }
+#endif
 
-
-//TODO
-void CAN2_TX_IRQHandler(void){
-
-}
-
-//TODO
 void CAN2_RX0_IRQHandler(void){
-#if 0
-	extern uint32_t potVCU;
 
 	CanRxMsg RxMessage;
 
-	CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
+	CAN_Receive(CAN, CAN_FIFO, &RxMessage);
 
-
-	if(RxMessage.StdId == May12)
-	{
-		potVCU = RxMessage.Data[0];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[1];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[2];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[3];
-		potVCU<<=8;
-		if (potVCU > 0xff0a)
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
-		else
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
-
-
-
-		//		switch (bus_state){
-		//		//disabilita timer per l'invio di pacchetti
-		//		case 0:
-		//			if(bus_state) TIM_Cmd (TIM2, DISABLE);
-		//			break;
-		//
-		//			//abilita il timer per l'invio di pacchetti
-		//		case 1:
-		//			if (!bus_state)	TIM_Cmd (TIM2, ENABLE);
-		//			break;
-		//		}
-	}
-	else CAN_Manage_Rx(RxMessage);
-#endif
+	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer
+	if(RxMessage.ExtId == VCU_TIME_SLOT)
+		TIM_start();
 }
 
-/*
+/**
+ * @brief 	Pack data into CAN packet and transmit it when timer occurs
+ * @param	None
+ * @retval	None
+ */
 void TIM3_IRQHandler(void){
 
 	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET) {
-		Data[0] = 0xAA;
-		CAN_Tx(pack.length, pack.Data, pack.ID);
+		ATOMIC();
+
+		CAN_pack_data();
+		CAN_Tx();
+
+		END_ATOMIC();
 	}
 
 	TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
-}*/
+}

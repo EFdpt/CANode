@@ -15,6 +15,7 @@
 #include "include.h"
 
 #define BUFFER_SIZE		        (64)
+#define DOUBLE_BUFFER_MODE		(1)
 
 #if defined(_PEDALI)
 
@@ -25,9 +26,9 @@
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		3
 
-	extern __IO uint16_t TPS1_DATA[];
-	extern __IO uint16_t TPS2_DATA[];
-	extern __IO uint16_t BRAKE_DATA[];
+	extern __IO uint16_t* TPS1_DATA;
+	extern __IO uint16_t* TPS2_DATA;
+	extern __IO uint16_t* BRAKE_DATA;
 
 	extern __IO uint16_t tps1_value;
 	extern __IO uint16_t tps2_value;
@@ -42,7 +43,7 @@
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		1
 
-	extern __IO uint16_t SUSP_DATA[];
+	extern __IO uint16_t* SUSP_DATA;
 
 	extern __IO uint16_t susp_value;
 
@@ -55,8 +56,8 @@
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		2
 
-	extern __IO uint16_t SUSP_DATA[];
-	extern __IO uint16_t STEER_DATA[];
+	extern __IO uint16_t* SUSP_DATA;
+	extern __IO uint16_t* STEER_DATA;
 
 	extern __IO uint16_t susp_value;
 	extern __IO uint16_t steer_value;
@@ -70,9 +71,9 @@
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		3
 
-	extern __IO uint16_t PRESS1_DATA[];
-	extern __IO uint16_t PRESS2_DATA[];
-	extern __IO uint16_t SUSP_DATA[];
+	extern __IO uint16_t* PRESS1_DATA;
+	extern __IO uint16_t* PRESS2_DATA;
+	extern __IO uint16_t* SUSP_DATA;
 
 	extern __IO uint16_t press1_value;
 	extern __IO uint16_t press2_value;
@@ -87,10 +88,10 @@
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		4
 
-	extern __IO uint16_t ACCX_DATA[];
-	extern __IO uint16_t ACCY_DATA[];
-	extern __IO uint16_t ACCZ_DATA[];
-	extern __IO uint16_t GYRO_DATA[];
+	extern __IO uint16_t* ACCX_DATA;
+	extern __IO uint16_t* ACCY_DATA;
+	extern __IO uint16_t* ACCZ_DATA;
+	extern __IO uint16_t* GYRO_DATA;
 
 	extern __IO uint16_t accx_value;
 	extern __IO uint16_t accy_value;
@@ -109,6 +110,8 @@
 	// i.e.
 	// buffer[x] --> buffer[pos(x)]
 	#define pos(x)			(x * ADC_SCAN_NUM)
+
+	#define DMA_IRQHandler	DMA_STREAM ## _IRQHandler
 
 #endif
 
