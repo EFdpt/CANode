@@ -16,7 +16,10 @@
 	#define BUFFER_CAPACITY		(BUFFER_SIZE * ADC_SCAN_NUM)
 
 	__IO uint16_t BUFFER_DATA[BUFFER_CAPACITY] = {0};
+
+#if DOUBLE_BUFFER_MODE
 	__IO uint16_t DOUBLE_BUFFER_DATA[BUFFER_CAPACITY] = {0};
+#endif
 
 	// the buffer with transferred data
 	__IO uint16_t DEST_BUFFER[BUFFER_CAPACITY] = {0};
@@ -180,56 +183,16 @@ void DMA_Config() {
 
 void copy_to_buffers() {
 
-#if DOUBLE_BUFFER_MODE
-
 #if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+	#if DOUBLE_BUFFER_MODE
 
-	uint32_t source = DMA_GetCurrentMemoryTarget(DMA_STREAM);
-	memcpy((uint16_t*) DEST_BUFFER, (uint16_t*) (!source ? BUFFER_DATA : DOUBLE_BUFFER_DATA), BUFFER_SIZE);
+		uint32_t source = DMA_GetCurrentMemoryTarget(DMA_STREAM);
+		memcpy((uint16_t*) DEST_BUFFER, (uint16_t*) (!source ? BUFFER_DATA : DOUBLE_BUFFER_DATA), BUFFER_SIZE);
 
-#endif
+	#else /* double buffer mode disabled */
 
-#else /* double buffer mode disabled */
+		memcpy((uint16_t*) DEST_BUFFER, (uint16_t*) BUFFER_DATA, BUFFER_SIZE);
 
-	int i = 0;
-
-#if defined(_PEDALI)
-
-	for (; i < BUFFER_SIZE; i++) {
-		TPS1_DATA[i] = BUFFER_DATA[pos(i)];
-		TPS2_DATA[i] = BUFFER_DATA[pos(i) + 1];
-		BRAKE_DATA[i] = BUFFER_DATA[pos(i) + 2];
-	}
-
-#elif defined(_RT_DX) || defined(_RT_SX)
-
-	memcpy((uint16_t*) SUSP_DATA, (uint16_t*) BUFFER_DATA, BUFFER_SIZE);
-
-#elif defined(_FR_DX)
-
-	for (; i < BUFFER_SIZE; i++) {
-		SUSP_DATA[i] = BUFFER_DATA[pos(i)];
-		STEER_DATA[i] = BUFFER_DATA[pos(i) + 1];
-	}
-
-#elif defined(_FR_SX)
-
-	for (; i < BUFFER_SIZE; i++) {
-		PRESS1_DATA[i] = BUFFER_DATA[pos(i)];
-		PRESS2_DATA[i] = BUFFER_DATA[pos(i) + 1];
-		SUSP_DATA[i] = BUFFER_DATA[pos(i) + 2];
-	}
-
-#elif defined(_COG)
-
-	for (; i < BUFFER_SIZE; i++) {
-		ACCX_DATA[i] = BUFFER_DATA[pos(i)];
-		ACCY_DATA[i] = BUFFER_DATA[pos(i) + 1];
-		ACCZ_DATA[i] = BUFFER_DATA[pos(i) + 2];
-		GYRO_DATA[i] = BUFFER_DATA[pos(i) + 3];
-	}
-
-#endif
-
+	#endif
 #endif
 }

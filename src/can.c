@@ -149,19 +149,7 @@ void CAN_pack_data() {
 }
 
 void CAN_Tx() {
-	CAN_Transmit(CAN2, &tx_msg);
-}
-
-void CAN_Manage_Rx(CanRxMsg* RxMessage) {
-
-
-	//	else if(RxMessage.StdId == BMS_TTAB_ID)
-	//	{
-	//		TTabAvg  = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		TTabHigh = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//	}
-
-
+	CAN_Transmit(CAN, &tx_msg);
 }
 
 uint8_t CAN_StatusControl(CAN_TypeDef* CANx) {

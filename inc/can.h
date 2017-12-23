@@ -70,6 +70,4 @@ void CAN_pack_data();
 
 void CAN_Tx();
 
-void CAN_Manage_Rx(CanRxMsg* RxMessage);
-
 #endif /* CAN_H_ */

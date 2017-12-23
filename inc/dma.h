@@ -21,6 +21,8 @@
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
+	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -38,6 +40,8 @@
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
+	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -51,6 +55,8 @@
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
+	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -66,6 +72,8 @@
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
+	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -83,6 +91,8 @@
 
 	#define DMA_STREAM			DMA2_Stream0
 	#define DMA_CHANNEL			DMA_Channel_0
+	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
+	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -109,9 +119,7 @@
 	// remapping of buffer position based on ADC_SCAN_NUM offset
 	// i.e.
 	// buffer[x] --> buffer[pos(x)]
-	#define pos(x)			(x * ADC_SCAN_NUM)
-
-	#define DMA_IRQHandler	DMA_STREAM ## _IRQHandler
+	#define pos(x)			((x) * ADC_SCAN_NUM)
 
 #endif
 

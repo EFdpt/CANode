@@ -29,6 +29,8 @@ void TIM_Config() {
 	/* TIM Interrupts enable */
 	TIM_ITConfig(TIMER, TIM_IT_CC1, ENABLE);
 
+	//TIM_Init(TIMER, &TIM_TimeBaseStructure);
+
 	/* TIM enable counter */
 	TIM_Cmd(TIMER, ENABLE);
 }

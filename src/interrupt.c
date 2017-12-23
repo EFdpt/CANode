@@ -34,25 +34,20 @@ void ADC_IRQHandler(void){
 
 }
 
-// TODO
-#ifdef DMA_IRQHandler
-
 void DMA_IRQHandler() {
 
-	// TODO: check which DMA FIFO is used
-	if(DMA_GetITStatus(DMA_STREAM, DMA_IT_TCIF0)) {
+	if (DMA_GetITStatus(DMA_STREAM, DMA_IT_FIFO) == SET) {
 
 		// all data have been transfered by DMA so now copy to sensor's buffers
 		copy_to_buffers();
 
 		/* Clear DMA Stream Transfer Complete interrupt pending bit */
-	    DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_TCIF0);
+	    DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_FIFO);
 
 	    // filter acquired data
 	    filter_data();
 	}
 }
-#endif
 
 void CAN2_RX0_IRQHandler(void){
 

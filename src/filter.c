@@ -9,135 +9,98 @@
 #include "filter.h"
 #include "util/inc/sort.h"
 
-#define FILTER_BOUND		(2)
+#define FILTER_BOUND			(2)
 
-void filter_data() {
+#define USE_LOOP_UNROLLING		(1)
+#define LOOP_UNROLLING_SIZE		(4)
 
-#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
+
 	int start = FILTER_BOUND;
-	int end = BUFFER_SIZE - (FILTER_BOUND << 2);
+	int end = size - (FILTER_BOUND << 2);
+	int divisor = end - start;
+	if (divisor <= 0)
+		divisor = 1;
 
 	volatile int index = start;
+
+#if USE_LOOP_UNROLLING
+	volatile long long sum1 = 0LL;
+	volatile long long sum2 = 0LL;
+	volatile long long sum3 = 0LL;
+	volatile long long sum4 = 0LL;
+
+	for (; index + LOOP_UNROLLING_SIZE < end; index += LOOP_UNROLLING_SIZE) {
+		sum1 += buffer[pos(index)];
+		sum2 += buffer[pos(index + 1)];
+		sum3 += buffer[pos(index + 2)];
+		sum4 += buffer[pos(index + 3)];
+	}
+
+	for (; index < end; index++)
+		sum1 += buffer[pos(index)];
+
+	return (sum1 + sum2 + sum3 + sum4) / divisor;
+#else
 	volatile long long sum = 0LL;
 
+	for (; index < end; index++) {
+		sum += buffer[pos(index)];
+	}
+	return sum / divisor;
 #endif
+}
+
+void filter_data() {
 
 #if defined(_PEDALI)
 
 	sort_off((uint16_t*) TPS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (; index < end; index++) {
-		sum += TPS1_DATA[pos(index)];
-	}
-
-	// aggiorna nuovo valore corrente
-	tps1_value = sum / (end - start);
+	tps1_value = filter_buffer((uint16_t*) TPS1_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) TPS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += TPS2_DATA[pos(index)];
-	}
-
-	tps2_value = sum / (end - start);
+	tps2_value = filter_buffer((uint16_t*) TPS2_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) BRAKE_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += BRAKE_DATA[pos(index)];
-	}
-
-	brake_value = sum / (end - start);
+	brake_value = filter_buffer((uint16_t*) BRAKE_DATA, BUFFER_SIZE);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
 	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (; index < end; index++) {
-		sum += SUSP_DATA[pos(index)];
-	}
-
-	// aggiorna nuovo valore corrente
-	susp_value = sum / (end - start);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
 #elif defined(_FR_DX)
 
 	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (; index < end; index++) {
-		sum += SUSP_DATA[pos(index)];
-	}
-
-	// aggiorna nuovo valore corrente
-	susp_value = sum / (end - start);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) STEER_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += STEER_DATA[pos(index)];
-	}
-
-	steer_value = sum / (end - start);
+	steer_value = filter_buffer((uint16_t*) STEER_DATA, BUFFER_SIZE);
 
 #elif defined(_FR_SX)
 
 	sort_off((uint16_t*) PRESS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += PRESS1_DATA[pos(index)];
-	}
-
-	press1_value = sum / (end - start);
+	press1_value = filter_buffer((uint16_t*) PRESS1_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) PRESS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += PRESS2_DATA[pos(index)];
-	}
-
-	press2_value = sum / (end - start);
+	press2_value = filter_buffer((uint16_t*) PRESS2_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += SUSP_DATA[pos(index)];
-	}
-
-	susp_value = sum / (end - start);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
 
 #elif defined(_COG)
 
 	sort_off((uint16_t*) ACCX_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += ACCX_DATA[pos(index)];
-	}
-
-	accx_value = sum / (end - start);
+	accx_value = filter_buffer((uint16_t*) ACCX_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) ACCY_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += ACCY_DATA[pos(index)];
-	}
-
-	accy_value = sum / (end - start);
+	accy_value = filter_buffer((uint16_t*) ACCY_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) ACCZ_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += ACCZ_DATA[pos(index)];
-	}
-
-	accz_value = sum / (end - start);
+	accz_value = filter_buffer((uint16_t*) ACCZ_DATA, BUFFER_SIZE);
 
 	sort_off((uint16_t*) GYRO_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
-
-	for (index = 0, sum = 0LL; index < end; index++) {
-		sum += GYRO_DATA[pos(index)];
-	}
-
-	gyro_value = sum / (end - start);
+	gyro_value = filter_buffer((uint16_t*) GYRO_DATA, BUFFER_SIZE);
 
 #endif
 }
