@@ -61,12 +61,12 @@
 
 #endif
 
-extern CanTxMsg tx_msg;
-extern CanRxMsg rx_msg;
+// extern CanTxMsg tx_msg;
+// extern CanRxMsg rx_msg;
 
 void CAN_Config();
 
-void CAN_pack_data();
+// void CAN_pack_data();
 
 void CAN_Tx();
 

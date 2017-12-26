@@ -32,10 +32,15 @@ void TIM_Config() {
 	//TIM_Init(TIMER, &TIM_TimeBaseStructure);
 
 	/* TIM enable counter */
-	TIM_Cmd(TIMER, ENABLE);
+	//TIM_Cmd(TIMER, ENABLE);
 }
 
 inline void TIM_start() {
 	/* TIM enable counter */
 	TIM_Cmd(TIMER, ENABLE);
+}
+
+inline void TIM_stop() {
+	/* stop TIMER peripheral */
+	TIM_Cmd(TIMER, DISABLE);
 }

@@ -1,9 +1,0 @@
-<map id="CAN_Private_Functions" name="CAN_Private_Functions">
-<area shape="rect" id="node1" href="$d6/d6e/group__CAN.html" title="CAN driver modules. " alt="" coords="5,177,56,203"/>
-<area shape="rect" id="node3" href="$d3/d19/group__CAN__Group1.html" title="Initialization and Configuration functions. " alt="" coords="329,5,489,47"/>
-<area shape="rect" id="node4" href="$d1/d9f/group__CAN__Group2.html" title="CAN Frames Transmission functions. " alt="" coords="319,71,500,112"/>
-<area shape="rect" id="node5" href="$d4/dd0/group__CAN__Group3.html" title="CAN Frames Reception functions. " alt="" coords="328,136,491,177"/>
-<area shape="rect" id="node6" href="$d5/d02/group__CAN__Group4.html" title="CAN Operation modes functions. " alt="" coords="332,201,487,243"/>
-<area shape="rect" id="node7" href="$dc/dff/group__CAN__Group5.html" title="CAN Bus Error management functions. " alt="" coords="315,267,504,308"/>
-<area shape="rect" id="node8" href="$da/d7d/group__CAN__Group6.html" title="Interrupts and flags management functions. " alt="" coords="330,332,489,373"/>
-</map>

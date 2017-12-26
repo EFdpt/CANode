@@ -1,6 +1,0 @@
-<map id="DCMI_Private_Functions" name="DCMI_Private_Functions">
-<area shape="rect" id="node1" href="$d4/d93/group__DCMI__Group1.html" title="Initialization and Configuration functions. " alt="" coords="329,5,489,47"/>
-<area shape="rect" id="node2" href="$dd/daa/group__DCMI__Group2.html" title="Image capture functions. " alt="" coords="328,71,491,98"/>
-<area shape="rect" id="node3" href="$d5/d1c/group__DCMI__Group3.html" title="Interrupts and flags management functions. " alt="" coords="330,123,489,164"/>
-<area shape="rect" id="node4" href="$d7/d4a/group__DCMI.html" title="DCMI driver modules. " alt="" coords="5,71,63,98"/>
-</map>

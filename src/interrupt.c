@@ -34,6 +34,12 @@ void ADC_IRQHandler(void){
 
 }
 
+/**
+ * @author	Arella Matteo
+ * @brief 	Copy data to destination buffer after DMA transfers complete, and filter value
+ * @param	None
+ * @retval	None
+ */
 void DMA_IRQHandler() {
 
 	if (DMA_GetITStatus(DMA_STREAM, DMA_IT_FIFO) == SET) {
@@ -49,32 +55,54 @@ void DMA_IRQHandler() {
 	}
 }
 
+/**
+ * @author	Arella Matteo
+ * @brief 	Receive VCU synch packet and start transmission timer
+ * @param	None
+ * @retval	None
+ */
 void CAN2_RX0_IRQHandler(void){
 
 	CanRxMsg RxMessage;
 
 	CAN_Receive(CAN, CAN_FIFO, &RxMessage);
 
-	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer
+	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer per l'offset
 	if(RxMessage.ExtId == VCU_TIME_SLOT)
 		TIM_start();
 }
 
 /**
- * @brief 	Pack data into CAN packet and transmit it when timer occurs
+ * @author	Arella Matteo
+ * @brief 	Transmit first CAN packet and start periodic systick timer
  * @param	None
  * @retval	None
  */
 void TIM3_IRQHandler(void){
 
-	if (TIM_GetITStatus(TIM3, TIM_IT_CC1) != RESET) {
+	if (TIM_GetITStatus(TIMER, TIM_IT_CC1) == SET) {
+
+		TIM_ClearITPendingBit(TIMER, TIM_IT_CC1);
+
 		ATOMIC();
-
-		CAN_pack_data();
 		CAN_Tx();
-
 		END_ATOMIC();
-	}
 
-	TIM_ClearITPendingBit(TIM3, TIM_IT_CC1);
+		TIM_stop();
+
+		// enable systick (timer periodico di spedizione pacchetti)
+		SysTick_Config(SystemCoreClock / TIMER_PERIOD_PRESCALER);
+	}
+}
+
+/**
+ * @author	Arella Matteo
+ * @brief 	Transmit CAN packet periodically
+ * @param	None
+ * @retval	None
+ */
+void SysTick_Handler(void) {
+	ATOMIC();
+	CAN_Tx();
+	END_ATOMIC();
 }

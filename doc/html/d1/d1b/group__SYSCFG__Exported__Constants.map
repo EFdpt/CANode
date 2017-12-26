@@ -1,7 +1,0 @@
-<map id="SYSCFG_Exported_Constants" name="SYSCFG_Exported_Constants">
-<area shape="rect" id="node1" href="$d0/d82/group__SYSCFG__EXTI__Port__Sources.html" title="SYSCFG_EXTI_Port_Sources" alt="" coords="381,5,581,32"/>
-<area shape="rect" id="node2" href="$d3/d93/group__SYSCFG__EXTI__Pin__Sources.html" title="SYSCFG_EXTI_Pin_Sources" alt="" coords="384,56,579,83"/>
-<area shape="rect" id="node3" href="$d7/d7c/group__SYSCFG.html" title="SYSCFG driver modules. " alt="" coords="5,85,83,112"/>
-<area shape="rect" id="node4" href="$d4/d2c/group__SYSCFG__ETHERNET__Media__Interface.html" title="SYSCFG_ETHERNET_Media\l_Interface" alt="" coords="382,107,581,149"/>
-<area shape="rect" id="node5" href="$de/de3/group__SYSCFG__Memory__Remap__Config.html" title="SYSCFG_Memory_Remap\l_Config" alt="" coords="391,173,571,214"/>
-</map>

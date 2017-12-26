@@ -14,8 +14,8 @@
 
 #include <stdint.h>
 
-uint16_t serializes(uint16_t);
-uint16_t deserializes(uint16_t);
+extern uint16_t serializes(uint16_t);
+extern uint16_t deserializes(uint16_t);
 
 #ifdef __cplusplus
 }

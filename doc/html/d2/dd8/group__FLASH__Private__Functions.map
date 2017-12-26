@@ -1,7 +1,0 @@
-<map id="FLASH_Private_Functions" name="FLASH_Private_Functions">
-<area shape="rect" id="node1" href="$d0/dfd/group__FLASH__Group1.html" title="FLASH Interface configuration functions. " alt="" coords="369,5,568,47"/>
-<area shape="rect" id="node2" href="$d9/db4/group__FLASH__Group2.html" title="FLASH Memory Programming functions. " alt="" coords="370,71,567,112"/>
-<area shape="rect" id="node3" href="$dc/dc7/group__FLASH__Group3.html" title="Option Bytes Programming functions. " alt="" coords="379,136,558,177"/>
-<area shape="rect" id="node4" href="$d6/d15/group__FLASH__Group4.html" title="Interrupts and flags management functions. " alt="" coords="389,201,548,243"/>
-<area shape="rect" id="node6" href="$dd/d7d/group__FLASH.html" title="FLASH driver modules. " alt="" coords="5,111,96,138"/>
-</map>

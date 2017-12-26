@@ -110,7 +110,7 @@ void CAN_Config() {
 
 }
 
-void CAN_pack_data() {
+static void CAN_pack_data() {
 #if defined(_PEDALI)
 
 	tx_msg.DLC = 6;
@@ -148,7 +148,8 @@ void CAN_pack_data() {
 #endif
 }
 
-void CAN_Tx() {
+inline void CAN_Tx() {
+	CAN_pack_data();
 	CAN_Transmit(CAN, &tx_msg);
 }
 

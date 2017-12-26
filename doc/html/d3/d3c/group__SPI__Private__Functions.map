@@ -1,8 +1,0 @@
-<map id="SPI_Private_Functions" name="SPI_Private_Functions">
-<area shape="rect" id="node1" href="$dd/d7a/group__SPI__Group1.html" title="Initialization and Configuration functions. " alt="" coords="315,5,475,47"/>
-<area shape="rect" id="node2" href="$d7/deb/group__SPI__Group2.html" title="Data transfers functions. " alt="" coords="313,71,476,98"/>
-<area shape="rect" id="node3" href="$dd/d2d/group__SPI__Group3.html" title="Hardware CRC Calculation functions. " alt="" coords="304,123,485,164"/>
-<area shape="rect" id="node4" href="$d4/d70/group__SPI__Group4.html" title="DMA transfers management functions. " alt="" coords="301,188,488,229"/>
-<area shape="rect" id="node5" href="$de/d54/group__SPI__Group5.html" title="Interrupts and flags management functions. " alt="" coords="315,253,474,295"/>
-<area shape="rect" id="node6" href="$da/d45/group__SPI.html" title="SPI driver modules. " alt="" coords="5,130,49,157"/>
-</map>

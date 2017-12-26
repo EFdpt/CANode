@@ -1,25 +1,10 @@
 <map id="src/interrupt.c" name="src/interrupt.c">
-<area shape="rect" id="node2" href="$dd/d78/interrupt_8h.html" title="interrupt.h" alt="" coords="1339,80,1419,107"/>
-<area shape="rect" id="node23" href="$d9/d95/dma_8h.html" title="dma.h" alt="" coords="1509,229,1568,256"/>
-<area shape="rect" id="node25" href="$dd/de7/filter_8h.html" title="filter.h" alt="" coords="1443,80,1501,107"/>
-<area shape="rect" id="node3" href="$d1/dbe/include_8h.html" title="include.h" alt="" coords="1343,155,1417,181"/>
-<area shape="rect" id="node4" href="$d3/d26/stm32f4xx__conf_8h.html" title="stm32f4xx_conf.h" alt="" coords="597,229,723,256"/>
-<area shape="rect" id="node6" href="$dc/dfd/stm32f4xx_8h.html" title="CMSIS Cortex&#45;M4 Device Peripheral Access Layer Header File. This file contains all the peripheral reg..." alt="" coords="613,379,707,405"/>
-<area shape="rect" id="node20" href="$d7/da8/can_8h.html" title="can.h" alt="" coords="1187,229,1242,256"/>
-<area shape="rect" id="node21" href="$d3/d02/board_8h.html" title="board.h" alt="" coords="1266,229,1331,256"/>
-<area shape="rect" id="node22" href="$d7/d19/adc_8h.html" title="adc.h" alt="" coords="1355,229,1410,256"/>
-<area shape="rect" id="node24" href="$d3/db0/tim_8h.html" title="tim.h" alt="" coords="1435,229,1485,256"/>
-<area shape="rect" id="node5" href="$d2/d0d/stm32f4xx__adc_8h.html" title="This file contains all the functions prototypes for the ADC firmware library. " alt="" coords="5,304,128,331"/>
-<area shape="rect" id="node13" href="$d4/dc9/stm32f4xx__dma_8h.html" title="This file contains all the functions prototypes for the DMA firmware library. " alt="" coords="153,304,279,331"/>
-<area shape="rect" id="node14" href="$d2/d27/stm32f4xx__gpio_8h.html" title="This file contains all the functions prototypes for the GPIO firmware library. " alt="" coords="304,304,429,331"/>
-<area shape="rect" id="node15" href="$d8/d73/stm32f4xx__pwr_8h.html" title="This file contains all the functions prototypes for the PWR firmware library. " alt="" coords="453,304,576,331"/>
-<area shape="rect" id="node16" href="$da/dc2/stm32f4xx__rcc_8h.html" title="This file contains all the functions prototypes for the RCC firmware library. " alt="" coords="601,304,719,331"/>
-<area shape="rect" id="node17" href="$db/d31/stm32f4xx__syscfg_8h.html" title="This file contains all the functions prototypes for the SYSCFG firmware library. " alt="" coords="743,304,883,331"/>
-<area shape="rect" id="node18" href="$dc/dec/stm32f4xx__tim_8h.html" title="This file contains all the functions prototypes for the TIM firmware library. " alt="" coords="907,304,1026,331"/>
-<area shape="rect" id="node19" href="$d4/d08/misc_8h.html" title="This file contains all the functions prototypes for the miscellaneous firmware library functions (add..." alt="" coords="1051,304,1112,331"/>
-<area shape="rect" id="node7" href="$d5/d35/core__cm4_8h.html" title="CMSIS Cortex&#45;M4 Core Peripheral Access Layer Header File. " alt="" coords="615,453,705,480"/>
-<area shape="rect" id="node12" href="$d5/df2/system__stm32f4xx_8h.html" title="CMSIS Cortex&#45;M4 Device System Source File for STM32F4xx devices. " alt="" coords="729,453,873,480"/>
-<area shape="rect" id="node9" href="$da/dc3/core__cmInstr_8h.html" title="CMSIS Cortex&#45;M Core Instruction Access Header File. " alt="" coords="605,528,715,555"/>
-<area shape="rect" id="node10" href="$df/d74/core__cmFunc_8h.html" title="CMSIS Cortex&#45;M Core Function Access Header File. " alt="" coords="739,528,851,555"/>
-<area shape="rect" id="node11" href="$df/ddd/core__cmSimd_8h.html" title="CMSIS Cortex&#45;M SIMD Header File. " alt="" coords="875,528,989,555"/>
+<area shape="rect" id="node2" href="$dd/d78/interrupt_8h.html" title="interrupt.h" alt="" coords="426,80,506,107"/>
+<area shape="rect" id="node9" href="$d9/d95/dma_8h.html" title="dma.h" alt="" coords="597,229,655,256"/>
+<area shape="rect" id="node11" href="$dd/de7/filter_8h.html" title="filter.h" alt="" coords="530,80,589,107"/>
+<area shape="rect" id="node3" href="$d1/dbe/include_8h.html" title="include.h" alt="" coords="430,155,505,181"/>
+<area shape="rect" id="node6" href="$d7/da8/can_8h.html" title="can.h" alt="" coords="275,229,329,256"/>
+<area shape="rect" id="node7" href="$d3/d02/board_8h.html" title="board.h" alt="" coords="353,229,419,256"/>
+<area shape="rect" id="node8" href="$d7/d19/adc_8h.html" title="adc.h" alt="" coords="443,229,497,256"/>
+<area shape="rect" id="node10" href="$d3/db0/tim_8h.html" title="tim.h" alt="" coords="522,229,573,256"/>
 </map>

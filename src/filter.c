@@ -9,10 +9,41 @@
 #include "filter.h"
 #include "util/inc/sort.h"
 
+/**
+ * @defgroup Filter
+ * @brief Filter module
+ * @{
+ */
+
+/**
+ *  @defgroup Filter_macros
+ * @{
+ */
+
+/**
+ * @brief Specifies the offset of values that will be ignored by the filter.
+ */
 #define FILTER_BOUND			(2)
 
+/**
+ * @brief Specifies if loop unrolling optimization will be used by the filter.
+ * 			@arg	1 - enabled
+ * 			@arg	0 - disabled
+ */
 #define USE_LOOP_UNROLLING		(1)
+
+/**
+ * @brief Specifies the loop unrolling factor.
+ */
 #define LOOP_UNROLLING_SIZE		(4)
+/**
+ * @}
+ */
+
+/**
+ *  @defgroup	Filter_functions
+ * @{
+ */
 
 /**
  *  @author		Arella Matteo
@@ -100,3 +131,10 @@ void filter_data() {
 
 #endif
 }
+/**
+ * @}
+ */
+
+/**
+ * @}
+ */

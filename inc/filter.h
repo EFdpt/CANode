@@ -14,10 +14,27 @@
 
 #include "include.h"
 
+/**
+ * @addtogroup Filter
+ * @{
+ */
+
+/**
+ * @addtogroup Filter_functions
+ * @brief	This function is used after DMA transfers complete to filter acquired data
+ * @{
+ */
 void filter_data();
+/**
+ * @}
+ */
 
 #ifdef __cplusplus
 }
 #endif
 
 #endif /* FILTER_H_ */
+
+/**
+ * @}
+ */

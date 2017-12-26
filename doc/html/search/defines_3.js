@@ -7,6 +7,5 @@ var searchData=
   ['can_5frx',['CAN_RX',['../d3/d02/board_8h.html#a432cd1f58398a7dbba4a3fffa9e2a151',1,'board.h']]],
   ['can_5ftx',['CAN_TX',['../d3/d02/board_8h.html#a2e2a30d5cdfd6401500776811d46cc0a',1,'board.h']]],
   ['cog_5fid',['COG_ID',['../d7/da8/can_8h.html#a2e3afd38cbfc11e7337dd20ab8c8a488',1,'can.h']]],
-  ['controller_5fq31_5fshift',['CONTROLLER_Q31_SHIFT',['../d4/d7b/arm__math_8h.html#aaff6d2358c4ada8de838a279254ab550',1,'arm_math.h']]],
   ['cruscotto_5fid',['CRUSCOTTO_ID',['../d7/da8/can_8h.html#afe5b018a14f9cdb8330a25c46b1631cb',1,'can.h']]]
 ];
