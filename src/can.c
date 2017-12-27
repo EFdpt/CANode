@@ -1,30 +1,42 @@
-#include "include.h"
+/*
+ *  @file 		can.c
+ *  @author		Arella Matteo
+ *  @date 		9 nov 2017
+ *  @brief		can.c module
+ */
 
-CanTxMsg TxMessage;
-uint16_t i=0;
+#include "can.h"
+#include "dma.h"
+#include "util/inc/net.h"
 
-extern uint16_t bus_state, IPackMsr, SoCMsr, TTabAvg, TTabHigh;
-extern uint32_t potVCU;
+CanTxMsg tx_msg = {0};
+CanRxMsg rx_msg = {0};
 
-/*il parametro tipoScheda deve essere uno tra
- * PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG
- * */
-void CAN_init()
-{
+void CAN_Config() {
+
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
+	defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+
 	NVIC_InitTypeDef  NVIC_InitStructure;
 	GPIO_InitTypeDef GPIO_InitStructure;
 	CAN_InitTypeDef	CAN_InitStructure;
 	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
 
+	tx_msg.ExtId = CAN_ID;
+	tx_msg.IDE = CAN_Id_Extended;
+	tx_msg.RTR = CAN_RTR_DATA;
 
+	/* Using CAN2 but for the fact CAN2 is slave CAN1 clock must be enabled too */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2 | RCC_APB1Periph_CAN1, ENABLE);
 
-	//RX
+	/* Configure GPIO Pins for CAN2 */
+
+	/* RX - PB5 */
 	GPIO_InitStructure.GPIO_Pin = CAN_RX;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
 
-	//TX
+	/* TX - PB6 */
 	GPIO_InitStructure.GPIO_Pin = CAN_TX;
 	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_AF;
 	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
@@ -32,158 +44,117 @@ void CAN_init()
 	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_100MHz;
 	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
 
-	GPIO_InitStructure.GPIO_Pin = ASCan;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_OUT;
-	GPIO_InitStructure.GPIO_OType = GPIO_OType_PP;
-	GPIO_InitStructure.GPIO_PuPd = GPIO_PuPd_DOWN;
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
-	GPIO_Init(CAN_GPIO, &GPIO_InitStructure);
-
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource5, GPIO_AF_CAN2);
 	GPIO_PinAFConfig(CAN_GPIO, GPIO_PinSource6, GPIO_AF_CAN2);
 
-	//inizializzazione default
-	CAN_DeInit(CAN);
-	CAN_StructInit(&CAN_InitStructure);
-
-	//inizializzazione vera
 	CAN_InitStructure.CAN_TTCM = DISABLE;
 	CAN_InitStructure.CAN_ABOM = ENABLE;
 	CAN_InitStructure.CAN_AWUM = DISABLE;
-	CAN_InitStructure.CAN_NART = ENABLE;	//ritrasmissione NON automatica, da abilitare
+	CAN_InitStructure.CAN_NART = ENABLE;	//abilitazione ritrasmissione NON automatica
 	CAN_InitStructure.CAN_RFLM = DISABLE;
 	CAN_InitStructure.CAN_TXFP = DISABLE;
-	CAN_InitStructure.CAN_Mode = CAN_Mode_Normal;
+	CAN_InitStructure.CAN_Mode = CAN_OperatingMode_Normal;
+
+	// TODO: fin qui tutto bene
+
 	CAN_InitStructure.CAN_SJW = CAN_SJW_1tq;
 	CAN_InitStructure.CAN_BS1 = CAN_BS1_14tq;
 	CAN_InitStructure.CAN_BS2 = CAN_BS2_6tq;
 	CAN_InitStructure.CAN_Prescaler = 2;//1Mb/s
-	CAN_Init(CAN, &CAN_InitStructure);
+	CAN_Init(CAN2, &CAN_InitStructure);
+
+	//SYSCLK = 168MHz, HCLK = 168MHz, PCLK1 = 42MHz, PCLK2 = 84MHz
+
 	/*
 	 * CAN BaudRate = 1/NominalBitTime
 	 * NominalBitTime =  1*tq + tBS1 + tBS2, where tq = prescaler * tPCLK (tPCLK = APB1 clock)
 	 *  */
 
-//	switch (posizione){
-//
-//	case PEDALI | FR_DX | FR_SX | RT_DX | RT_SX | BATTERIA:
-#ifdef _PEDALI | _FR_DX | _FR_SX | _RT_DX | _RT_SX | _BATTERIA
-		CAN_FilterInitStructure.CAN_FilterNumber = 9; //14
-		CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
-		CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_16bit; //32
-		CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
-		CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
-		CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
-		CAN_FilterInitStructure.CAN_FilterMaskIdLow = 0x00ff; //0000
-		CAN_FilterInitStructure.CAN_FilterFIFOAssignment = 0;
-		CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
-		CAN_FilterInit(&CAN_FilterInitStructure);
+	/*
+	 * Filter bank = 0, filter number = 2 -> 32bit mask
+	*/
+	CAN_FilterInitStructure.CAN_FilterNumber = 2; // o 9 se 16bit
 
-		CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
+	/**
+	 * CAN_FM1R -> FBMx = 0
+	 */
+	CAN_FilterInitStructure.CAN_FilterMode = CAN_FilterMode_IdMask;
 
-		NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+	/**
+	 * id mask a 32bit
+	 */
+	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit; //32
 
-		NVIC_InitStructure.NVIC_IRQChannel = CAN2_RX0_IRQn;
-		NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-		NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
-		NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-		NVIC_Init(&NVIC_InitStructure);
-//	break;
+	// TODO
+	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
+	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
+	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
+	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) VCU_TIME_SLOT; //0000
+
+	// end TODO
+
+	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
+	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
+	CAN_FilterInit(&CAN_FilterInitStructure);
+
+	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
+
+	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_0);
+
+	NVIC_InitStructure.NVIC_IRQChannel = CAN2_RX0_IRQn;
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
 #endif
 
-//	case CRUSCOTTO:
-//		break;
-//
-//	default:
-//		break;
-//	}
-
 }
 
-void CAN_Tx(uint8_t length, uint8_t Data[length], uint32_t ID, CAN_TypeDef* CANx){
+static void CAN_pack_data() {
+#if defined(_PEDALI)
 
-	TxMessage.StdId = ID;
-	TxMessage.ExtId = 0x01;
-	TxMessage.RTR = CAN_RTR_DATA;
-	TxMessage.IDE = CAN_ID_STD;
-	TxMessage.DLC = length;
-	for (i=0; i < length; i++)
-		TxMessage.Data[i]=(uint8_t) Data[i];
-	CAN_Transmit(CANx, &TxMessage);
+	tx_msg.DLC = 6;
+	*((uint16_t*) tx_msg.Data) = serializes(tps1_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(tps2_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(brake_data);
+
+#elif defined(_RT_DX) || defined(_RT_SX)
+
+	tx_msg.DLC = 2;
+	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
+
+#elif defined(_FR_DX)
+
+	tx_msg.DLC = 4;
+	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(steer_value);
+
+#elif defined(_FR_SX)
+
+	tx_msg.DLC = 6;
+	*((uint16_t*) tx_msg.Data) = serializes(press1_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(press2_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(susp_value);
+
+
+#elif defined(_COG) || defined(_TEST_UP)
+
+	tx_msg.DLC = 8;
+	*((uint16_t*) tx_msg.Data) = serializes(accx_value);
+	((uint16_t*) tx_msg.Data)[1] = serializes(accy_value);
+	((uint16_t*) tx_msg.Data)[2] = serializes(accz_value);
+	((uint16_t*) tx_msg.Data)[3] = serializes(gyro_value);
+
+#endif
 }
 
-
-void CAN2_RX0_IRQHandler(void){
-
-	CanRxMsg RxMessage;
-
-	CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
-
-
-	if(RxMessage.StdId == May12)
-	{
-		potVCU = RxMessage.Data[0];
-		potVCU<<8;
-		potVCU |= RxMessage.Data[1];
-		potVCU<<8;
-		potVCU |= RxMessage.Data[2];
-		potVCU<<8;
-		potVCU |= RxMessage.Data[3];
-		potVCU<<8;
-		if (potVCU > 0xff0a)
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
-		else
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
-
-
-
-		//		switch (bus_state){
-		//		//disabilita timer per l'invio di pacchetti
-		//		case 0:
-		//			if(bus_state) TIM_Cmd (TIM2, DISABLE);
-		//			break;
-		//
-		//			//abilita il timer per l'invio di pacchetti
-		//		case 1:
-		//			if (!bus_state)	TIM_Cmd (TIM2, ENABLE);
-		//			break;
-		//		}
-	}
-	else CAN_Manage_Rx(RxMessage);
+inline void CAN_Tx() {
+	CAN_pack_data();
+	CAN_Transmit(CAN, &tx_msg);
 }
 
-void CAN_Manage_Rx(CanRxMsg RxMessage)
-{
-
-	//	else if(RxMessage.StdId == BMS_TTAB_ID)
-	//	{
-	//		TTabAvg  = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		TTabHigh = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//	}
-
-
-}
-
-
-void CAN_BMS_Manage_Rx(CanRxMsg RxMessage)
-{
-	//	if(RxMessage.StdId == BMS_PACK_ID)
-	//	{
-	//		bus_state = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		IPackMsr = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//		SoCMsr 	 = (RxMessage.Data[5] << 8) | RxMessage.Data[4];
-	//	}
-	//	else if(RxMessage.StdId == BMS_TTAB_ID)
-	//	{
-	//		TTabAvg  = (RxMessage.Data[1] << 8) | RxMessage.Data[0];
-	//		TTabHigh = (RxMessage.Data[3] << 8) | RxMessage.Data[2];
-	//	}
-	//
-
-}
-
-uint8_t CAN_StatusControl(CAN_TypeDef* CANx)
-{
+uint8_t CAN_StatusControl(CAN_TypeDef* CANx) {
+#if 0
 	uint8_t CAN_LastErrorCode = CAN_GetLastErrorCode(CANx);
 	uint8_t CAN_TEC = CAN_GetLSBTransmitErrorCounter(CANx);
 	uint8_t CAN_REC = CAN_GetReceiveErrorCounter(CANx);
@@ -201,6 +172,8 @@ uint8_t CAN_StatusControl(CAN_TypeDef* CANx)
 	CAN_ClearFlag(CANx, CAN_FLAG_EWG);
 
 	return CAN_ErrorCode_NoErr;
+#endif
+	return 0;
 }
 
 void CAN_DisableFilter(uint8_t CAN_FilterNum)

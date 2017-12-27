@@ -5,8 +5,11 @@
  * to match the hardware board configuration
  *
  * */
-#define _PEDALI
+
 #include "board.h"
+
+GPIO_InitTypeDef  GPIO_InitStructure;
+RCC_ClocksTypeDef RCC_ClockFreq;
 
 void GPIO_init(GPIO_TypeDef* GPIOx, uint32_t Pin, GPIOMode_TypeDef Mode, GPIOOType_TypeDef OType, GPIOSpeed_TypeDef Speed, GPIOPuPd_TypeDef PuPd){
 	GPIO_InitStructure.GPIO_Pin = Pin;
@@ -17,7 +20,7 @@ void GPIO_init(GPIO_TypeDef* GPIOx, uint32_t Pin, GPIOMode_TypeDef Mode, GPIOOTy
 	GPIO_Init(GPIOx, &GPIO_InitStructure);
 }
 
-/* questa funzione viene invocata per configurare le funzionalità  della
+/* questa funzione viene invocata per configurare le funzionalitï¿½ della
  * scheda in base al parametro posizione NON VIRGOLETTATO che deve essere
  * uno tra: PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG
  *
@@ -51,7 +54,7 @@ void Init_Board(){
 	RCC_GetClocksFreq(&RCC_ClockFreq);//check the frequency
 
 	/* GPIOA/B/C/D Peripheral clock enable */
-	RCC_AHB1PeriphClockCmd(RCC_AHB1Periph_DMA2 |
+	RCC_AHB1PeriphClockCmd(
 			RCC_AHB1Periph_GPIOA |
 			RCC_AHB1Periph_GPIOB |
 			RCC_AHB1Periph_GPIOC |
@@ -69,15 +72,10 @@ void Init_Board(){
 
 //	case PEDALI:
 #ifdef _PEDALI
-		//	ADC1/2/3 Peripheral Clock Enable
-		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
-				RCC_APB2Periph_ADC2 |
-				RCC_APB2Periph_ADC3,
-				ENABLE);
 
 
-		GPIO_init(GPIOA, MCO1, GPIO_Mode_AF, GPIO_OType_PP, GPIO_Speed_25MHz, GPIO_PuPd_NOPULL);
-		GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_MCO);
+		GPIO_init(GPIOA, MCO1, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
 
 		GPIO_init(GPIOA, en23, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
@@ -115,15 +113,98 @@ void Init_Board(){
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
 
-		CAN_init();
-		//TODO ADC INIT
-		/* ADC configuration */
-		//ADC_Config();
-#endif
 
-//		break;
-//	case CRUSCOTTO:
-#ifdef _CRUSCOTTO
+
+#elif defined (_TEST_DOWN)
+/*test di consumi bassi tutte le periferiche sono spente e gli integrati sulla scheda
+ * disabilitati
+ * */
+
+		GPIO_init(GPIOA, MCO1, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		GPIO_init(GPIOA, en23, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		GPIO_init(GPIOA, ADCrd1 | ADCrd2 | tempRD, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*pin NON utilizzati configurati INPUT pullDOWN*/
+		GPIO_init(GPIOA, USART1cts | USART1rts | USART1rx | USART1tx, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*i pin non utilizzati vengono configurati come digital IN e pullDOWN*/
+		GPIO_init(GPIOB, I2C1scl | I2C1sda | Mux1 | ENMux | LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/* i fet di abilitazione degli OpAmp12 e 34 sono pilotati con un PullUp,
+		 * DOWN per accendere l'integrato, UP per disabilitare l'OpAmp
+		 * */
+		GPIO_init(GPIOB, EnADC12 | EnADC34 , GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
+
+
+		GPIO_init(GPIOB, en21 | ADCrd3, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*
+		 * dg31 e dg41 sono collegati all'OpAmp differenziale, NON AGGIUNGERE RESISTENZE PULL UP/DOWN*/
+		GPIO_init(GPIOB,dg31 | dg41, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*
+		 * dg11 e dg21 sono collegati all'OpAmp differenziale, NON AGGIUNGERE RESISTENZE PULL UP/DOWN*/
+		GPIO_init(GPIOC, dg11 | dg21, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/* il fet di abilitazione dell'uscita5V-22
+		 * Ã¨ pilotato con un PullUp
+		 * */
+		GPIO_init(GPIOC, en22, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*i pin non utilizzati vengono configurati come digital IN e pullDOWN*/
+		GPIO_init(GPIOC, ENRS | HDPLX | RSelect | SpeedRS | SCK3 | MOSI3 | MISO3, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+
+		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+#elif defined (_TEST_UP)
+
+		/*
+		 * SteerAngSupply  ON*/
+		GPIO_init(GPIOA, en23, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+
+		GPIO_init(GPIOA, ADCrd1 | ADCrd2 |tempRD, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
+
+		/*il pin 18 del molex dovrebbe uscire il clock del proc fa un pin nella mmh*/
+		GPIO_init(GPIOA, MCO1, GPIO_Mode_AF, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
+		GPIO_PinAFConfig(GPIOA, GPIO_PinSource8, GPIO_AF_MCO);
+
+		/*i pin non utilizzati vengono configurati come digital IN e pullDOWN*/
+		GPIO_init(GPIOB,  I2C1scl | I2C1sda | Mux1 | EnADC34, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/* i fet di abilitazione dell'uscita5V-21 e dellOpAmp12
+		 * sono pilotati con un PullUp
+		 * */
+		GPIO_init(GPIOB, LSfet | en21 | EnADC12| ENMux , GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
+
+		/**/
+		GPIO_init(GPIOB, dg31 | dg41, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_NOPULL);
+
+		/**/
+		GPIO_init(GPIOB, ADCrd3, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz,GPIO_PuPd_NOPULL);
+
+		/**/
+		GPIO_init(GPIOC, dg11 | dg21, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_NOPULL);
+
+		GPIO_init(GPIOC, ADCrd4, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
+
+		/* il fet di abilitazione dell'uscita5V-22
+		 * Ã¨ pilotato con un PullUp per disabilitare l'uscita, un pullDOWN per abilitarla
+		 * */
+		GPIO_init(GPIOC, en22, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		/*i pin non utilizzati vengono configurati come digital IN e pullDOWN*/
+		GPIO_init(GPIOC, HDPLX | RSelect | SpeedRS | SCK3 | MOSI3 | MISO3, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+		GPIO_init(GPIOC, ENRS, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
+
+		/**/
+		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
+
+#elif defined (_CRUSCOTTO)
 
 		//TODO cruscotto Init
 		/* 1x AIR button - D
@@ -190,17 +271,7 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(CRUSCOTTO);
-		//TODO ADC INIT
-		/* ADC configuration */
-		ADC_Config();
-#endif
-
-
-//		break;
-//	case FR_DX:
-
-#ifdef _FR_DX
+#elif defined (_FR_DX)
 		//TODO fr_dx ADC Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -245,13 +316,7 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(FR_DX);
-		//TODO ADC Init
-#endif
-
-//		break;
-//	case FR_SX:
-#ifdef _FR_SX
+#elif defined (_FR_SX)
 		//TODO fr_sx Init
 
 		//	ADC1/2 Peripheral Clock Enable
@@ -299,13 +364,7 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(FR_SX);
-		//TODO ADC Init
-#endif
-
-//		break;
-//	case RT_DX:
-#ifdef _RT_DX
+#elif defined (_RT_DX)
 		//TODO rt_dx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -344,13 +403,7 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(RT_DX);
-		//TODO ADC Init
-#endif
-
-//		break;
-//	case RT_SX:
-#ifdef _RT_SX
+#elif defined (_RT_SX)
 		//TODO rt_sx Init
 		//	ADC1/2 Peripheral Clock Enable
 		RCC_APB2PeriphClockCmd(RCC_APB2Periph_ADC1 |
@@ -389,13 +442,7 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(RT_SX);
-		//TODO ADC Init
-#endif
-
-//		break;
-//	case BATTERIA:
-#ifdef _BATTERIA
+#elif defined (_BATTERIA)
 		//TODO batteria Init
 
 		GPIO_init(GPIOA, tempRD, GPIO_Mode_AN, GPIO_OType_PP, GPIO_Speed_100MHz, GPIO_PuPd_NOPULL);
@@ -411,7 +458,7 @@ void Init_Board(){
 		GPIO_init(GPIOB, LSfet, GPIO_Mode_OUT, GPIO_OType_PP, GPIO_Speed_50MHz, GPIO_PuPd_NOPULL);
 
 		/* il fet di abilitazione dell'uscita5V-22
-		 * è pilotato con un PullUp
+		 * ï¿½ pilotato con un PullUp
 		 * */
 		GPIO_init(GPIOC, dg11, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
 
@@ -421,21 +468,12 @@ void Init_Board(){
 		/**/
 		GPIO_init(GPIOD, Mux0, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
 
-		CAN_init(BATTERIA);
-		//TODO I2C_init() func
-		//		I2C_init();
+#else
+	#error "No board specified"
 #endif
 
-//		break;
-//	case COG:
-		//TODO CoG Init
-
-//		break;
-//	default:
-
-//		break;
-//	}	// end of the MEGA switch
-
-
+	CAN_Config();
+	ADC_Config();
+	DMA_Config();
 }
 

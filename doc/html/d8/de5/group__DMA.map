@@ -1,0 +1,6 @@
+<map id="DMA" name="DMA">
+<area shape="rect" id="node1" href="$dc/d12/group__DMA__data__buffers.html" title="Sensors data destination buffers. " alt="" coords="105,5,236,32"/>
+<area shape="rect" id="node3" href="$d3/d69/group__DMA__macros.html" title="DMA_macros" alt="" coords="119,56,222,83"/>
+<area shape="rect" id="node4" href="$d9/d1d/group__DMA__data__values.html" title="Sensors data current values. " alt="" coords="106,107,235,133"/>
+<area shape="rect" id="node5" href="$d6/d7c/group__DMA__functions.html" title="DMA_functions" alt="" coords="115,157,227,184"/>
+</map>

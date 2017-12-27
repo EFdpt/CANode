@@ -1,8 +1,8 @@
 /*
- * can.h
- *
- *  Created on: Jan 11, 2015
- *      Author: Simone Palombi
+ *  @file 		can.h
+ *  @author		Arella Matteo
+ *  @date 		9 nov 2017
+ *  @brief		Header for can.c module
  */
 
 #ifndef CAN_H_
@@ -10,33 +10,64 @@
 
 #include "include.h"
 
-//CAN1->Master ???
-//CAN2->Slave  ???
+/**
+ * 	packets ID
+ */
+#define VCU_STATE_ID		(0x20)
+#define VCU_TIME_SLOT		(0x15)
+#define FR_DX_ID			(0x50)
+#define FR_SX_ID			(0x30)
+#define RT_DX_ID			(0x60)
+#define RT_SX_ID			(0x40)
+#define CRUSCOTTO_ID		(0x25)
+#define BATTERIA_ID			(0x35)
+#define PEDALI_ID			(0x10)
+#define COG_ID				(0x70)
 
-//CAN defines
-#define CAN				CAN2
+#define CAN					CAN2
+#define CAN_FIFO			CAN_FIFO0
 
-//defines FILTER_NUM
-#define CAN_Filt_Num		14
+#if defined(_PEDALI)
 
-#define N_FILTER			1
+	#define CAN_ID			PEDALI_ID
 
-//Controllo errori
-#define TEC_REC_ERROR	1	//Sia TEC che REC maggiori di 127
-#define TEC_ERROR		2	//TEC maggiore di 127
-#define REC_ERROR		3	//REC maggiore di 127
+#elif defined(_RT_DX)
 
-void CAN_init();
+	#define CAN_ID 			RT_DX_ID
 
-//CANx can be one of the CAN defines
-void CAN_Tx(uint8_t lenght, uint8_t Data[lenght], uint32_t ID, CAN_TypeDef* CANx);
-void CAN2_RX0_IRQHandler(void);
-void CAN_BMS_Manage_Rx(CanRxMsg RxMessage);
-void CAN_Manage_Rx(CanRxMsg RxMessage);
-uint8_t CAN_StatusControl(CAN_TypeDef* CANx);
+#elif defined(_RT_SX)
 
-//CAN_FilterNum can be one of the defines FILTER_NUM
-void CAN_SetFilter(uint16_t* ID, uint8_t IDcount, uint8_t CAN_FilterNum);
-void CAN_DisableFilter(uint8_t CAN_FilterNum);
+	#define CAN_ID			RT_SX_ID
+
+#elif defined(_FR_DX)
+
+	#define CAN_ID			FR_DX_ID
+
+#elif defined(_FR_SX)
+
+	#define CAN_ID			FR_SX_ID
+
+#elif defined(_COG) || defined(_TEST_UP)
+
+	#define CAN_ID			COG_ID
+
+#elif defined(_CRUSCOTTO)
+
+	#define CAN_ID			CRUSCOTTO_ID
+
+#elif defined(_BATTERIA)
+
+	#define CAN_ID			BATTERIA_ID
+
+#endif
+
+// extern CanTxMsg tx_msg;
+// extern CanRxMsg rx_msg;
+
+void CAN_Config();
+
+// void CAN_pack_data();
+
+void CAN_Tx();
 
 #endif /* CAN_H_ */
