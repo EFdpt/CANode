@@ -76,26 +76,53 @@
 #define throttle_2		ADCrd2
 #define brakePot		ADCrd3
 
+
 #elif defined _FR_DX
 
-#define pickup			SCK3
+#define pickup			MCO1
 #define sospFrDx 		ADCrd1
 #define SteerAng		ADCrd2
 #define	sospSupply		en21
 #define	pickupSupply	en22
 #define SteerAngSupply	en23
 
+
+#elif defined _FR_SX
+
+#define pickup			MCO1
+#define sospFrSx 		ADCrd1
+#define pressHydr1		ADCrd2
+#define pressHydr2		ADCrd3
+#define	sospSupply		en21
+#define	pickupSupply	en22
+#define pressHydrSupply	en23
+
+#elif defined _RT_DX
+
+#define pickup			MCO1
+#define sospRtDx 		ADCrd1
+#define	sospSupply		en21
+#define	pickupSupply	en22
+
+
+#elif defined _RT_SX
+
+#define pickup			MCO1
+#define sospRtSx 		ADCrd1
+#define	sospSupply		en21
+#define	pickupSupply	en22
+
+
 #elif defined _CRUSCOTTO
 
 #define pot1			ADCrd1
 #define pot2			ADCrd2
 
+
+#elif defined _BATTERIA
+
 #endif
 
-/* con i define si riesce a ridurre
- * il codice compilato a quello dedicato alla scheda scelta
- * */
-//typedef enum {PEDALI, CRUSCOTTO, FR_DX, FR_SX, RT_DX, RT_SX, BATTERIA, COG} tipoScheda;
 
 /*
  * @brief: selezione delle funzioni della scheda
