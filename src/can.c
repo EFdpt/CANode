@@ -5,9 +5,8 @@
  *  @brief		can.c module
  */
 
-#include "can.h"
-#include "dma.h"
-#include "util/inc/net.h"
+#include "include.h"
+#include "net.h"
 
 CanTxMsg tx_msg = {0};
 CanRxMsg rx_msg = {0};
@@ -116,7 +115,7 @@ static void CAN_pack_data() {
 	tx_msg.DLC = 6;
 	*((uint16_t*) tx_msg.Data) = serializes(tps1_value);
 	((uint16_t*) tx_msg.Data)[1] = serializes(tps2_value);
-	((uint16_t*) tx_msg.Data)[2] = serializes(brake_data);
+	((uint16_t*) tx_msg.Data)[2] = serializes(brake_value);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 

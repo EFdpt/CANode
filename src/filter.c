@@ -7,7 +7,7 @@
 
 
 #include "filter.h"
-#include "util/inc/sort.h"
+#include "sort.h"
 
 /**
  * @defgroup Filter

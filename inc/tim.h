@@ -14,45 +14,54 @@
 
 #include "include.h"
 
-#define TIMER					TIM3
+#define OFFSET_TIMER			TIM3
+#define OFFSET_TIMER_CLOCK		RCC_APB1Periph_TIM3
 #define TIMER_IRQCHANNEL		TIM3_IRQn
+#define TIMER_PERIOD			1000				// 1ms
 
 #if defined(_PEDALI)
-	#define TIMER_PRESCALER 		((uint16_t) 199)
+
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 1000) // 1ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 5000) // 5ms period
+
 #elif defined(_RT_DX)
 
-	#define TIMER_PRESCALER			((uint16_t) 99)
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 5000) // 5ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
 #elif defined(_RT_SX)
 
-#define CAN_ID			RT_SX_ID
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 3000) // 3ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
 #elif defined(_FR_DX)
 
-	#define TIMER_PRESCALER					((uint16_t) 99) // 100 - 1
-	#define TIMER_PERIOD_PRESCALER			((uint16_t) 10000)
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 4000) // 4ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
 #elif defined(_FR_SX)
 
-#define CAN_ID			FR_SX_ID
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 2000) // 2ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
 #elif defined(_COG) || defined(_TEST_UP)
 
-#define CAN_ID			COG_ID
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) UINT16_MAX)
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) UINT16_MAX)
 
 #elif defined(_CRUSCOTTO)
 
-#define CAN_ID			CRUSCOTTO_ID
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 8000) // 8ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 250000) // 250ms period
 
 #elif defined(_BATTERIA)
 
-#define CAN_ID			BATTERIA_ID
+	#define OFFSET_TIMER_PRESCALER			((uint16_t) 7000) // 7ms offset
+	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
 #endif
 
-#define TIMER_PERIOD 			0
-
-extern void TIM_Config();
+extern void Offset_Config();
 
 extern void TIM_start();
 
