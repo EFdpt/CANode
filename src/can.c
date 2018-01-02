@@ -7,7 +7,7 @@
 
 #include "can.h"
 #include "dma.h"
-#include "util/inc/net.h"
+
 
 CanTxMsg tx_msg = {0};
 CanRxMsg rx_msg = {0};

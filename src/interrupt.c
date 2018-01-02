@@ -1,9 +1,7 @@
 #include "interrupt.h"
-<<<<<<< HEAD
-=======
+
 #include "dma.h"
 #include "filter.h"
->>>>>>> develop
 
 	/*	TODO
 	 * PVD interrupt monitora la tensione di alimentazione
@@ -19,22 +17,7 @@ void PVD_IRQHandler(void){
  * bisogna controllare quale flag è stato asserita per capire cosa è successo
  *TODO OVR, EOC, AWD*/
 void ADC_IRQHandler(void){
-<<<<<<< HEAD
-	if(ADC_GetFlagStatus(ADC1,ADC_FLAG_EOC)==SET){
-		//do something alla fine della conversione
 
-		ADC_ClearFlag (ADC1,ADC_FLAG_EOC);
-	}
-	else if(ADC_GetFlagStatus(ADC1,ADC_FLAG_AWD)==SET){
-		//un regular channel è andato oltre le soglie
-
-		ADC_ClearFlag (ADC1,ADC_FLAG_AWD);
-	}
-	else if(ADC_GetFlagStatus(ADC1,ADC_FLAG_OVR)==SET){
-		//l'ADC1 è andato in OVERRUN!! DMA disabilitate, tocca farle ripartire pag 400 RM0090
-
-		ADC_ClearFlag (ADC1,ADC_FLAG_OVR);
-=======
 	if(ADC_GetITStatus(ADC1,ADC_IT_EOC)!=RESET){
 		//do something alla fine della conversione
 
@@ -49,12 +32,12 @@ void ADC_IRQHandler(void){
 		//l'ADC1 è andato in OVERRUN!! DMA disabilitate, tocca farle ripartire pag 400 RM0090
 
 		ADC_ClearITPendingBit(ADC1,ADC_IT_OVR);
->>>>>>> develop
+
 	}
 
 }
 
-<<<<<<< HEAD
+
 // TODO
 void DMA2_Stream0_IRQHandler() {
 
@@ -66,46 +49,7 @@ void CAN2_TX_IRQHandler(void){
 
 }
 
-//TODO
-void CAN2_RX0_IRQHandler(void){
-	extern uint32_t potVCU;
 
-	CanRxMsg RxMessage;
-
-	CAN_Receive(CAN2, CAN_FIFO0, &RxMessage);
-
-
-	if(RxMessage.StdId == May12)
-	{
-		potVCU = RxMessage.Data[0];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[1];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[2];
-		potVCU<<=8;
-		potVCU |= RxMessage.Data[3];
-		potVCU<<=8;
-		if (potVCU > 0xff0a)
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_UP);
-		else
-			GPIO_init(GPIOB,LSfet, GPIO_Mode_IN, GPIO_OType_PP, GPIO_Speed_2MHz, GPIO_PuPd_DOWN);
-
-
-
-		//		switch (bus_state){
-		//		//disabilita timer per l'invio di pacchetti
-		//		case 0:
-		//			if(bus_state) TIM_Cmd (TIM2, DISABLE);
-		//			break;
-		//
-		//			//abilita il timer per l'invio di pacchetti
-		//		case 1:
-		//			if (!bus_state)	TIM_Cmd (TIM2, ENABLE);
-		//			break;
-		//		}
-	}
-	else CAN_Manage_Rx(RxMessage);
-=======
 /**
  * @author	Arella Matteo
  * @brief 	Copy data to destination buffer after DMA transfers complete, and filter value
@@ -141,7 +85,7 @@ void CAN2_RX0_IRQHandler(void){
 
 	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer per l'offset
 	if(RxMessage.ExtId == VCU_TIME_SLOT)
-		TIM_start();
+		TIM_start(TIMER);
 }
 
 /**
@@ -160,7 +104,7 @@ void TIM3_IRQHandler(void){
 		CAN_Tx();
 		END_ATOMIC();
 
-		TIM_stop();
+		TIM_stop(TIMER);
 
 		// enable systick (timer periodico di spedizione pacchetti)
 		SysTick_Config(SystemCoreClock / TIMER_PERIOD_PRESCALER);
@@ -177,5 +121,5 @@ void SysTick_Handler(void) {
 	ATOMIC();
 	CAN_Tx();
 	END_ATOMIC();
->>>>>>> develop
+
 }

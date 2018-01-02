@@ -1,7 +1,7 @@
 /*
  *  @file 		tim.h
- *  @author		Arella Matteo
- *  @date 		20 dic 2017
+ *  @author		Arella Matteo & Valerio Dodet
+ *  @date 		02 Jan 2018
  *  @brief		Header for tim.c module
  */
 
@@ -22,6 +22,7 @@
 #elif defined(_RT_DX)
 
 	#define TIMER_PRESCALER			((uint16_t) 99)
+	
 
 #elif defined(_RT_SX)
 
@@ -54,9 +55,13 @@
 
 extern void TIM_Config();
 
-extern void TIM_start();
+extern void TIM_start(TIM_TypeDef*);
 
-extern void TIM_stop();
+extern void TIM_stop(TIM_TypeDef*);
+
+extern void TIMpickup_Config();
+
+
 
 #ifdef __cplusplus
 }

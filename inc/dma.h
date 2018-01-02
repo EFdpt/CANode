@@ -1,7 +1,7 @@
 /*
  *  @file 		dma.h
- *  @author		Arella Matteo
- *  @date 		14 set 2017
+ *  @author		Arella Matteo & Valerio Dodet
+ *  @date 		2 Jan 2018
  *  @brief		Header for dma.c module
  */
 
@@ -35,6 +35,8 @@
 
 /**
  * @}
+ * TODO DMA per le ruote foniche
+ *
  */
 #if defined(_PEDALI)
 

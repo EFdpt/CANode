@@ -29,4 +29,6 @@
 #include "dma.h"
 #include "tim.h"
 
+#include "../util/inc/net.h"
+
 #endif /* INCLUDE_H_ */
