@@ -88,6 +88,12 @@
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
+	#define PICKUP_DMA_STREAM	DMA2_Stream6
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
+
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		1
 	/**
@@ -123,6 +129,12 @@
 	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define PICKUP_DMA_STREAM	DMA2_Stream6
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
 
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		2
@@ -161,6 +173,12 @@
 	#define DMA_IRQHandler		DMA2_Stream0_IRQHandler
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
+
+	#define PICKUP_DMA_STREAM	DMA2_Stream6
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
 
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		3
@@ -267,6 +285,13 @@
   * @retval None
   */
 extern void DMA_Config();
+
+/**
+  * @brief  This function is used to initialize DMA for pickup sensor
+  * @param  None
+  * @retval None
+  */
+extern void PickUp_DMA_Config();
 
 /**
   * @brief  This function is used to copy DMA buffer data (after transfer complete) to specific sensor measure buffer
