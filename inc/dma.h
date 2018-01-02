@@ -99,6 +99,7 @@
 	 * @{
 	 */
 	extern __IO uint16_t* SUSP_DATA;
+	#define PICKUP_BUFFER_SIZE		(32)
 	/**
 	 * @}
 	 */
@@ -108,6 +109,7 @@
 	 * @{
 	 */
 	extern __IO uint16_t susp_value;
+	extern __IO uint16_t pickup_value;
 	/**
 	 * @}
 	 */
@@ -134,6 +136,7 @@
 	 */
 	extern __IO uint16_t* SUSP_DATA;
 	extern __IO uint16_t* STEER_DATA;
+	#define PICKUP_BUFFER_SIZE		(32)
 	/**
 	 * @}
 	 */
@@ -144,6 +147,7 @@
 	 */
 	extern __IO uint16_t susp_value;
 	extern __IO uint16_t steer_value;
+	extern __IO uint16_t pickup_value;
 	/**
 	 * @}
 	 */
@@ -171,6 +175,7 @@
 	extern __IO uint16_t* PRESS1_DATA;
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
+	#define PICKUP_BUFFER_SIZE		(32)
 	/**
 	 * @}
 	 */
@@ -182,6 +187,7 @@
 	extern __IO uint16_t press1_value;
 	extern __IO uint16_t press2_value;
 	extern __IO uint16_t susp_value;
+	extern __IO uint16_t pickup_value;
 	/**
 	 * @}
 	 */

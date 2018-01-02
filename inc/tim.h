@@ -6,7 +6,7 @@
  */
 
 #ifndef TIM_H_
-#define TIM_H_
+	#define TIM_H_
 
 #ifdef __cplusplus
 	extern "C" {
@@ -17,16 +17,20 @@
 #define TIMER					TIM3
 #define TIMER_IRQCHANNEL		TIM3_IRQn
 
+#if defined(_RT_DX)|| defined(_RT_SX)|| defined (_FR_DX)|| defined(_FR_SX)
+	#define TIM1_PRESCALER			((uint16_t) 10000)	//TODO 8.4KHz CK_CNT
+#endif
+
+
 #if defined(_PEDALI)
 	#define TIMER_PRESCALER 		((uint16_t) 199)
 #elif defined(_RT_DX)
 
 	#define TIMER_PRESCALER			((uint16_t) 99)
-	
 
 #elif defined(_RT_SX)
 
-#define CAN_ID			RT_SX_ID
+	#define CAN_ID			RT_SX_ID
 
 #elif defined(_FR_DX)
 
@@ -35,19 +39,19 @@
 
 #elif defined(_FR_SX)
 
-#define CAN_ID			FR_SX_ID
+	#define CAN_ID			FR_SX_ID
 
 #elif defined(_COG) || defined(_TEST_UP)
 
-#define CAN_ID			COG_ID
+	#define CAN_ID			COG_ID
 
 #elif defined(_CRUSCOTTO)
 
-#define CAN_ID			CRUSCOTTO_ID
+	#define CAN_ID			CRUSCOTTO_ID
 
 #elif defined(_BATTERIA)
 
-#define CAN_ID			BATTERIA_ID
+	#define CAN_ID			BATTERIA_ID
 
 #endif
 
