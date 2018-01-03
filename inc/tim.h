@@ -50,17 +50,7 @@
 	#define OFFSET_TIMER_PRESCALER			((uint16_t) 2000) // 2ms offset
 	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
-#elif defined(_COG) || defined(_TEST_UP)
-
-	#define OFFSET_TIMER_PRESCALER			((uint16_t) UINT16_MAX)
-	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) UINT16_MAX)
-
-#elif defined(_CRUSCOTTO)
-
-	#define OFFSET_TIMER_PRESCALER			((uint16_t) 8000) // 8ms offset
-	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 250000) // 250ms period
-
-#elif defined(_BATTERIA)
+#elif defined(_COG)
 
 	#define OFFSET_TIMER_PRESCALER			((uint16_t) 7000) // 7ms offset
 	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
