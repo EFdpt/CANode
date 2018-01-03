@@ -37,13 +37,6 @@ void ADC_IRQHandler(void){
 
 }
 
-
-// TODO
-void DMA2_Stream0_IRQHandler() {
-
-}
-
-
 //TODO
 void CAN2_TX_IRQHandler(void){
 
@@ -56,7 +49,7 @@ void CAN2_TX_IRQHandler(void){
  * @param	None
  * @retval	None
  */
-void DMA_IRQHandler() {
+void DMA2_IRQHandler(void) {
 
 	if (DMA_GetITStatus(DMA_STREAM, DMA_IT_FIFO) == SET) {
 
@@ -84,8 +77,13 @@ void CAN2_RX0_IRQHandler(void){
 	CAN_Receive(CAN, CAN_FIFO, &RxMessage);
 
 	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer per l'offset
-	if(RxMessage.ExtId == VCU_TIME_SLOT)
-		TIM_start(TIMER);
+	if(RxMessage.ExtId & VCU_TIME_SLOT) {
+
+		// ferma SysTick (disable timer exceptions & system timer)
+		SysTick -> CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+
+		TIM_start(OFFSET_TIMER);
+	}
 }
 
 /**
@@ -96,18 +94,16 @@ void CAN2_RX0_IRQHandler(void){
  */
 void TIM3_IRQHandler(void){
 
-	if (TIM_GetITStatus(TIMER, TIM_IT_CC1) == SET) {
+	if (TIM_GetITStatus(OFFSET_TIMER, TIM_IT_Update) == SET) {
 
-		TIM_ClearITPendingBit(TIMER, TIM_IT_CC1);
+		TIM_ClearITPendingBit(OFFSET_TIMER, TIM_IT_Update);
 
-		ATOMIC();
 		CAN_Tx();
-		END_ATOMIC();
-
-		TIM_stop(TIMER);
 
 		// enable systick (timer periodico di spedizione pacchetti)
-		SysTick_Config(SystemCoreClock / TIMER_PERIOD_PRESCALER);
+		SysTick_Config(SystemCoreClock / SYSTIMER_PERIOD_PRESCALER);
+
+		TIM_stop(OFFSET_TIMER);
 	}
 }
 
@@ -118,8 +114,5 @@ void TIM3_IRQHandler(void){
  * @retval	None
  */
 void SysTick_Handler(void) {
-	ATOMIC();
 	CAN_Tx();
-	END_ATOMIC();
-
 }

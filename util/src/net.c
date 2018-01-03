@@ -8,7 +8,7 @@
 #include "net.h"
 
 inline uint16_t serializes(uint16_t n) {
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__ // if bigger endian swap bytes
 	asm ("rev16 %1,%0"
 	          : "=r" (n)
 	          : "r" (n));
@@ -16,7 +16,7 @@ inline uint16_t serializes(uint16_t n) {
 	  return n;
 }
 inline uint16_t deserializes(uint16_t n) {
-#if __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+#if __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__ // if bigger endian swap bytes
 	asm ("rev16 %1,%0"
 	          : "=r" (n)
 	          : "r" (n));
