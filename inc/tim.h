@@ -6,7 +6,7 @@
  */
 
 #ifndef TIM_H_
-	#define TIM_H_
+#define TIM_H_
 
 #ifdef __cplusplus
 	extern "C" {

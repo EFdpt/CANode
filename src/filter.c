@@ -52,7 +52,7 @@
  *  @param		size [in] The size of the buffer
  *  @retval		Filtered value
  */
-static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
+static inline uint16_t filter_buffer(uint16_t* buffer, int size, unsigned offset) {
 
 	int start = FILTER_BOUND;
 	int end = size - (FILTER_BOUND << 2);
@@ -62,7 +62,7 @@ static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
 
 	volatile int index = start;
 
-	sort_off((uint16_t*) buffer, BUFFER_SIZE, ADC_SCAN_NUM);
+	sort_off((uint16_t*) buffer, BUFFER_SIZE, offset);
 
 #if USE_LOOP_UNROLLING
 	volatile long long sum1 = 0LL;
@@ -71,21 +71,21 @@ static inline uint16_t filter_buffer(uint16_t* buffer, int size) {
 	volatile long long sum4 = 0LL;
 
 	for (; index + LOOP_UNROLLING_SIZE < end; index += LOOP_UNROLLING_SIZE) {
-		sum1 += buffer[pos(index)];
-		sum2 += buffer[pos(index + 1)];
-		sum3 += buffer[pos(index + 2)];
-		sum4 += buffer[pos(index + 3)];
+		sum1 += buffer[pos(index, offset)];
+		sum2 += buffer[pos(index + 1, offset)];
+		sum3 += buffer[pos(index + 2, offset)];
+		sum4 += buffer[pos(index + 3, offset)];
 	}
 
 	for (; index < end; index++)
-		sum1 += buffer[pos(index)];
+		sum1 += buffer[pos(index, offset)];
 
 	return (sum1 + sum2 + sum3 + sum4) / divisor;
 #else
 	volatile long long sum = 0LL;
 
 	for (; index < end; index++) {
-		sum += buffer[pos(index)];
+		sum += buffer[pos(index, offset)];
 	}
 	return sum / divisor;
 #endif
@@ -95,41 +95,46 @@ void filter_data() {
 
 #if defined(_PEDALI)
 
-	tps1_value = filter_buffer((uint16_t*) TPS1_DATA, BUFFER_SIZE);
+	tps1_value = filter_buffer((uint16_t*) TPS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	tps2_value = filter_buffer((uint16_t*) TPS2_DATA, BUFFER_SIZE);
+	tps2_value = filter_buffer((uint16_t*) TPS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	brake_value = filter_buffer((uint16_t*) BRAKE_DATA, BUFFER_SIZE);
+	brake_value = filter_buffer((uint16_t*) BRAKE_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #elif defined(_FR_DX)
 
-	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	steer_value = filter_buffer((uint16_t*) STEER_DATA, BUFFER_SIZE);
+	steer_value = filter_buffer((uint16_t*) STEER_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #elif defined(_FR_SX)
 
-	press1_value = filter_buffer((uint16_t*) PRESS1_DATA, BUFFER_SIZE);
+	press1_value = filter_buffer((uint16_t*) PRESS1_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	press2_value = filter_buffer((uint16_t*) PRESS2_DATA, BUFFER_SIZE);
+	press2_value = filter_buffer((uint16_t*) PRESS2_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE);
+	susp_value = filter_buffer((uint16_t*) SUSP_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #elif defined(_COG)
 
-	accx_value = filter_buffer((uint16_t*) ACCX_DATA, BUFFER_SIZE);
+	accx_value = filter_buffer((uint16_t*) ACCX_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	accy_value = filter_buffer((uint16_t*) ACCY_DATA, BUFFER_SIZE);
+	accy_value = filter_buffer((uint16_t*) ACCY_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	accz_value = filter_buffer((uint16_t*) ACCZ_DATA, BUFFER_SIZE);
+	accz_value = filter_buffer((uint16_t*) ACCZ_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
-	gyro_value = filter_buffer((uint16_t*) GYRO_DATA, BUFFER_SIZE);
+	gyro_value = filter_buffer((uint16_t*) GYRO_DATA, BUFFER_SIZE, ADC_SCAN_NUM);
 
 #endif
+
+	if (model_get_status() != DRIVE) {
+		// update bound values
+		model_calibrate_bounds();
+	}
 }
 /**
  * @}

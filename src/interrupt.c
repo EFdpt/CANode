@@ -79,10 +79,17 @@ void CAN2_RX0_IRQHandler(void){
 	// se pacchetto di synch della VCU (unico ricevuto dopo filtraggio hardware) avvia il timer per l'offset
 	if(RxMessage.ExtId & VCU_TIME_SLOT) {
 
-		// ferma SysTick (disable timer exceptions & system timer)
-		SysTick -> CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+		if (RxMessage.Data[0] == DRIVE) {
 
-		TIM_start(OFFSET_TIMER);
+			model_goto_drive();
+
+			// ferma SysTick (disable timer exceptions & system timer)
+			SysTick -> CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+
+			TIM_start(OFFSET_TIMER);
+		} else {
+			// nothing to do here
+		}
 	}
 }
 

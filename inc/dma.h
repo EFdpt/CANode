@@ -67,17 +67,6 @@
 	 * @}
 	 */
 
-	/** @defgroup DMA_data_values
-	 *  @brief Sensors data current values
-	 * @{
-	 */
-	extern __IO uint16_t tps1_value;
-	extern __IO uint16_t tps2_value;
-	extern __IO uint16_t brake_value;
-	/**
-	 * @}
-	 */
-
 #elif defined(_RT_DX) || defined(_RT_SX)
 	/** @addtogroup DMA_macros
 	 * @{
@@ -106,16 +95,6 @@
 	 */
 	extern __IO uint16_t* SUSP_DATA;
 	#define PICKUP_BUFFER_SIZE		(32)
-	/**
-	 * @}
-	 */
-
-	/** @defgroup DMA_data_values
-	 *  @brief Sensors data current values
-	 * @{
-	 */
-	extern __IO uint16_t susp_value;
-	extern __IO uint16_t pickup_value;
 	/**
 	 * @}
 	 */
@@ -153,17 +132,6 @@
 	 * @}
 	 */
 
-	/** @defgroup DMA_data_values
-	 *  @brief Sensors data current values
-	 * @{
-	 */
-	extern __IO uint16_t susp_value;
-	extern __IO uint16_t steer_value;
-	extern __IO uint16_t pickup_value;
-	/**
-	 * @}
-	 */
-
 #elif defined(_FR_SX)
 	/** @addtogroup DMA_macros
 	 * @{
@@ -197,18 +165,6 @@
 	/**
 	 * @}
 	 */
-
-	/** @defgroup DMA_data_values
-	 *  @brief Sensors data current values
-	 * @{
-	 */
-	extern __IO uint16_t press1_value;
-	extern __IO uint16_t press2_value;
-	extern __IO uint16_t susp_value;
-	extern __IO uint16_t pickup_value;
-	/**
-	 * @}
-	 */
 #elif defined(_COG) || defined(_TEST_UP)
 	/** @addtogroup DMA_macros
 	 * @{
@@ -236,18 +192,6 @@
 	/**
 	 * @}
 	 */
-
-	/** @defgroup DMA_data_values
-	 *  @brief Sensors data current values
-	 * @{
-	 */
-	extern __IO uint16_t accx_value;
-	extern __IO uint16_t accy_value;
-	extern __IO uint16_t accz_value;
-	extern __IO uint16_t gyro_value;
-	/**
-	 * @}
-	 */
 #elif defined(_CRUSCOTTO) || defined(_BATTERIA) || defined(_TEST_DOWN)
 
 #else
@@ -261,12 +205,12 @@
 	 */
 
 	/**
-	 * @brief Remapping of buffer position based on ADC_SCAN_NUM offset
+	 * @brief Remapping of buffer position based on offset (f.e. ADC_SCAN_NUM)
 	 * @attention
 	 *			Never access buffers by absolute indexing: use always this macro
 	 * 			(instead of buffer[x] use buffer[pos(x)])
 	 */
-	#define pos(x)			((x) * ADC_SCAN_NUM)
+	#define pos(x, offset)			((x) * offset)
 
 	/**
 	 * @}

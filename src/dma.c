@@ -33,16 +33,10 @@
 	__IO uint16_t* TPS2_DATA = DEST_BUFFER + 1;
 	__IO uint16_t* BRAKE_DATA = DEST_BUFFER + 2;
 
-	__IO uint16_t tps1_value = 0;
-	__IO uint16_t tps2_value = 0;
-	__IO uint16_t brake_value = 0;
-
 #elif defined(_RT_DX) || defined(_RT_SX)
 
 	__IO uint16_t* SUSP_DATA = DEST_BUFFER;
-	__IO uint16_t* PICKUP_DATA = DEST_BUFFER+1;
-
-	__IO uint16_t susp_value = 0;
+	__IO uint16_t PICKUP_BUFFER_DATA[PICKUP_BUFFER_SIZE] = {0};
 
 #elif defined(_FR_DX)
 
@@ -50,10 +44,6 @@
 	__IO uint16_t* STEER_DATA = DEST_BUFFER + 1;
 
 	__IO uint16_t PICKUP_BUFFER_DATA[PICKUP_BUFFER_SIZE] = {0};
-
-	__IO uint16_t susp_value = 0;
-	__IO uint16_t steer_value = 0;
-	__IO uint16_t pickup_value = 0;
 
 #elif defined(_FR_SX)
 
@@ -63,22 +53,12 @@
 
 	__IO uint16_t PICKUP_BUFFER_DATA[PICKUP_BUFFER_SIZE] = {0};
 
-	__IO uint16_t press1_value = 0;
-	__IO uint16_t press2_value = 0;
-	__IO uint16_t susp_value = 0;
-	__IO uint16_t pickup_value = 0;
-
 #elif defined(_COG)
 
 	__IO uint16_t* ACCX_DATA = DEST_BUFFER;
 	__IO uint16_t* ACCY_DATA = DEST_BUFFER + 1;
 	__IO uint16_t* ACCZ_DATA = DEST_BUFFER + 2;
 	__IO uint16_t* GYRO_DATA = DEST_BUFFER + 3;
-
-	__IO uint16_t accx_value = 0;
-	__IO uint16_t accy_value = 0;
-	__IO uint16_t accz_value = 0;
-	__IO uint16_t gyro_value = 0;
 
 #endif
 

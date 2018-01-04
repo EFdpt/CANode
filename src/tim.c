@@ -74,7 +74,7 @@ void TIMpickup_Config(){
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseStructure.TIM_Period = TIMER_PERIOD;
-	TIM_TimeBaseStructure.TIM_Prescaler = TIM1_PRESCALER;
+	//TIM_TimeBaseStructure.TIM_Prescaler = TIM1_PRESCALER;
 
 //	/* Enable the TIMER global Interrupt */
 //	NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;	//timer1 capture compare interrupt channel

@@ -6,7 +6,8 @@
  */
 
 #include "can.h"
-#include "dma.h"
+#include "../inc/dma.h"
+#include "../util/inc/misc.h"
 
 
 CanTxMsg tx_msg = {0};
@@ -113,10 +114,21 @@ void CAN_Config() {
 static void CAN_pack_data() {
 #if defined(_PEDALI)
 
+#if 0
 	tx_msg.DLC = 6;
 	*((uint16_t*) tx_msg.Data) = serializes(tps1_value);
 	((uint16_t*) tx_msg.Data)[1] = serializes(tps2_value);
 	((uint16_t*) tx_msg.Data)[2] = serializes(brake_data);
+#endif
+
+	tx_msg.DLC = 4;
+	tx_msg.Data[0] = map_byte(tps1_value, tps1_low, tps1_up, 0, 100);
+	tx_msg.Data[1] = map_byte(tps2_value, tps2_low, tps2_up, 0, 100);
+	tx_msg.Data[2] = map_byte(brake_value, brake_low, brake_up, 0, 100);
+
+	// TODO: update plaus1 & plaus2
+
+	tx_msg.Data[3] = (plaus1 << 4) | (plaus2 & 0x0F);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
