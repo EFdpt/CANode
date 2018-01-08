@@ -6,5 +6,11 @@ int main(void) {
 
 	Init_Board();
 
-	while(1) {}
+	RCC_ClocksTypeDef clock;
+
+	while(1) {
+
+		RCC_GetClocksFreq(&clock);
+
+	}
 }

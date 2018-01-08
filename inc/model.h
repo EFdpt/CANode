@@ -27,7 +27,12 @@ extern void model_goto_drive();
 
 extern void model_calibrate_bounds();
 
+extern void model_check_plausibility();
+
 #if defined(_PEDALI)
+
+	#define RunTH 			25
+	#define RunBK			10
 
 	extern __IO uint16_t tps1_value;
 	extern __IO uint16_t tps2_value;
@@ -39,6 +44,10 @@ extern void model_calibrate_bounds();
 	extern __IO uint16_t tps2_up;
 	extern __IO uint16_t brake_low;
 	extern __IO uint16_t brake_up;
+
+	extern __IO uint8_t tps1_percentage;
+	extern __IO uint8_t tps2_percentage;
+	extern __IO uint8_t brake_percentage;
 
 	extern __IO uint8_t plaus1;
 	extern __IO uint8_t plaus2;

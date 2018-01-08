@@ -9,10 +9,6 @@
 #include "../inc/dma.h"
 #include "../util/inc/misc.h"
 
-
-CanTxMsg tx_msg = {0};
-CanRxMsg rx_msg = {0};
-
 void CAN_Config() {
 
 #if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || \
@@ -22,10 +18,6 @@ void CAN_Config() {
 	GPIO_InitTypeDef GPIO_InitStructure;
 	CAN_InitTypeDef	CAN_InitStructure;
 	CAN_FilterInitTypeDef  CAN_FilterInitStructure;
-
-	tx_msg.ExtId = CAN_ID;
-	tx_msg.IDE = CAN_Id_Extended;
-	tx_msg.RTR = CAN_RTR_DATA;
 
 	/* Using CAN2 but for the fact CAN2 is slave CAN1 clock must be enabled too */
 	RCC_APB1PeriphClockCmd(RCC_APB1Periph_CAN2 | RCC_APB1Periph_CAN1, ENABLE);
@@ -111,58 +103,66 @@ void CAN_Config() {
 
 }
 
-static void CAN_pack_data() {
+static void CAN_pack_data(CanTxMsg* tx_msg) {
+
+#if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
+	tx_msg -> ExtId = CAN_ID;
+	tx_msg -> IDE = CAN_Id_Extended;
+	tx_msg -> RTR = CAN_RTR_DATA;
+#endif
+
 #if defined(_PEDALI)
 
 #if 0
 	tx_msg.DLC = 6;
-	*((uint16_t*) tx_msg.Data) = serializes(tps1_value);
-	((uint16_t*) tx_msg.Data)[1] = serializes(tps2_value);
-	((uint16_t*) tx_msg.Data)[2] = serializes(brake_data);
+	*((uint16_t*) tx_msg -> Data) = serializes(tps1_value);
+	((uint16_t*) tx_msg -> Data)[1] = serializes(tps2_value);
+	((uint16_t*) tx_msg -> Data)[2] = serializes(brake_data);
 #endif
 
-	tx_msg.DLC = 4;
-	tx_msg.Data[0] = map_byte(tps1_value, tps1_low, tps1_up, 0, 100);
-	tx_msg.Data[1] = map_byte(tps2_value, tps2_low, tps2_up, 0, 100);
-	tx_msg.Data[2] = map_byte(brake_value, brake_low, brake_up, 0, 100);
+	tx_msg -> DLC = 4;
+	tx_msg -> Data[0] = map_byte(tps1_value, tps1_low, tps1_up, 0, 100);
+	tx_msg -> Data[1] = map_byte(tps2_value, tps2_low, tps2_up, 0, 100);
+	tx_msg -> Data[2] = map_byte(brake_value, brake_low, brake_up, 0, 100);
 
-	// TODO: update plaus1 & plaus2
+	// update plaus1 & plaus2
+	model_check_plausibility();
 
-	tx_msg.Data[3] = (plaus1 << 4) | (plaus2 & 0x0F);
+	tx_msg -> Data[3] = (plaus1 << 4) | (plaus2 & 0x0F);
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	tx_msg.DLC = 2;
-	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
+	tx_msg -> DLC = 2;
+	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
 
 #elif defined(_FR_DX)
 
-	tx_msg.DLC = 4;
-	*((uint16_t*) tx_msg.Data) = serializes(susp_value);
-	((uint16_t*) tx_msg.Data)[1] = serializes(steer_value);
+	tx_msg -> DLC = 4;
+	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
+	((uint16_t*) tx_msg -> Data)[1] = serializes(steer_value);
 
 #elif defined(_FR_SX)
 
-	tx_msg.DLC = 6;
-	*((uint16_t*) tx_msg.Data) = serializes(press1_value);
-	((uint16_t*) tx_msg.Data)[1] = serializes(press2_value);
-	((uint16_t*) tx_msg.Data)[2] = serializes(susp_value);
+	tx_msg -> DLC = 6;
+	*((uint16_t*) tx_msg -> Data) = serializes(press1_value);
+	((uint16_t*) tx_msg -> Data)[1] = serializes(press2_value);
+	((uint16_t*) tx_msg -> Data)[2] = serializes(susp_value);
 
 
 #elif defined(_COG) || defined(_TEST_UP)
 
-	tx_msg.DLC = 8;
-	*((uint16_t*) tx_msg.Data) = serializes(accx_value);
-	((uint16_t*) tx_msg.Data)[1] = serializes(accy_value);
-	((uint16_t*) tx_msg.Data)[2] = serializes(accz_value);
-	((uint16_t*) tx_msg.Data)[3] = serializes(gyro_value);
+	tx_msg -> DLC = 8;
+	*((uint16_t*) tx_msg -> Data) = serializes(accx_value);
+	((uint16_t*) tx_msg -> Data)[1] = serializes(accy_value);
+	((uint16_t*) tx_msg -> Data)[2] = serializes(accz_value);
+	((uint16_t*) tx_msg -> Data)[3] = serializes(gyro_value);
 
 #endif
 }
 
-inline void CAN_Tx() {
-	CAN_pack_data();
-	CAN_Transmit(CAN, &tx_msg);
+inline void CAN_Tx(CanTxMsg* tx_msg) {
+	CAN_pack_data(tx_msg);
+	CAN_Transmit(CAN, tx_msg);
 }
 
 uint8_t CAN_StatusControl(CAN_TypeDef* CANx) {

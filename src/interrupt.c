@@ -103,9 +103,11 @@ void TIM3_IRQHandler(void){
 
 	if (TIM_GetITStatus(OFFSET_TIMER, TIM_IT_Update) == SET) {
 
+		CanTxMsg 	msg;
+
 		TIM_ClearITPendingBit(OFFSET_TIMER, TIM_IT_Update);
 
-		CAN_Tx();
+		CAN_Tx(&msg);
 
 		// enable systick (timer periodico di spedizione pacchetti)
 		SysTick_Config(SystemCoreClock / SYSTIMER_PERIOD_PRESCALER);
