@@ -55,7 +55,7 @@ void CAN_Config() {
 	CAN_InitStructure.CAN_BS2 = CAN_BS2_6tq;
 	CAN_InitStructure.CAN_Prescaler = 2;//1Mb/s
 	CAN_Init(CAN2, &CAN_InitStructure);
-
+#if 0
 	//SYSCLK = 168MHz, HCLK = 168MHz, PCLK1 = 42MHz, PCLK2 = 84MHz
 
 	/*
@@ -89,6 +89,7 @@ void CAN_Config() {
 	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
 	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
 	CAN_FilterInit(&CAN_FilterInitStructure);
+#endif
 
 	CAN_ITConfig(CAN2, CAN_IT_FMP0, ENABLE);
 
@@ -161,7 +162,9 @@ static void CAN_pack_data(CanTxMsg* tx_msg) {
 }
 
 inline void CAN_Tx(CanTxMsg* tx_msg) {
+	ATOMIC();
 	CAN_pack_data(tx_msg);
+	END_ATOMIC();
 	CAN_Transmit(CAN, tx_msg);
 }
 

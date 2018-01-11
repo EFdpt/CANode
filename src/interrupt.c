@@ -82,14 +82,12 @@ void CAN2_RX0_IRQHandler(void){
 		if (RxMessage.Data[0] == DRIVE) {
 
 			model_goto_drive();
-
-			// ferma SysTick (disable timer exceptions & system timer)
-			SysTick -> CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
-
-			TIM_start(OFFSET_TIMER);
-		} else {
-			// nothing to do here
 		}
+
+		// ferma SysTick (disable timer exceptions & system timer)
+		SysTick -> CTRL &= ~(SysTick_CTRL_TICKINT_Msk | SysTick_CTRL_ENABLE_Msk);
+
+		TIM_start(OFFSET_TIMER);
 	}
 }
 
@@ -123,5 +121,6 @@ void TIM3_IRQHandler(void){
  * @retval	None
  */
 void SysTick_Handler(void) {
-	CAN_Tx();
+	CanTxMsg 	msg;
+	CAN_Tx(&msg);
 }

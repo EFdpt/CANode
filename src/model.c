@@ -113,6 +113,9 @@ void model_calibrate_bounds() {
 
 inline void model_check_plausibility() {
 #if defined(_PEDALI)
+	if (current_status != DRIVE)
+		return;
+
 	uint8_t distance = tps1_percentage > tps2_percentage ?
 				tps1_percentage - tps2_percentage : tps2_percentage - tps1_percentage;
 	if (distance > 10)

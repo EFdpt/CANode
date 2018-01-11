@@ -68,6 +68,6 @@ void CAN_Config();
 
 // void CAN_pack_data();
 
-void CAN_Tx();
+void CAN_Tx(CanTxMsg* msg);
 
 #endif /* CAN_H_ */

@@ -32,5 +32,6 @@
 #include "board.h"
 #include "adc.h"
 #include "tim.h"
+#include "interrupt.h"
 
 #endif /* INCLUDE_H_ */
