@@ -27,6 +27,7 @@
  * @brief Specifies the size of the buffer for each of sensor's data.
  */
 #define BUFFER_SIZE		        (64)
+#define PICKUP_BUFFER_SIZE		(32)
 
 /**
  * @brief Specifies if the Double Buffer Mode is used in DMA.
@@ -35,7 +36,7 @@
 
 /**
  * @}
- * TODO DMA per le ruote foniche
+ *
  *
  */
 #if defined(_PEDALI)
@@ -77,11 +78,11 @@
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
-	#define PICKUP_DMA_STREAM	DMA2_Stream6
-	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
-	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_STREAM	DMA2_Stream3
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
 	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
-	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		1
@@ -94,7 +95,7 @@
 	 * @{
 	 */
 	extern __IO uint16_t* SUSP_DATA;
-	#define PICKUP_BUFFER_SIZE		(32)
+
 	/**
 	 * @}
 	 */
@@ -109,11 +110,11 @@
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
-	#define PICKUP_DMA_STREAM	DMA2_Stream6
-	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
-	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_STREAM	DMA2_Stream3
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
 	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
-	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		2
@@ -127,7 +128,7 @@
 	 */
 	extern __IO uint16_t* SUSP_DATA;
 	extern __IO uint16_t* STEER_DATA;
-	#define PICKUP_BUFFER_SIZE		(32)
+
 	/**
 	 * @}
 	 */
@@ -142,11 +143,11 @@
 	#define DMA_IT_FIFO			DMA_IT_TCIF0
 	#define DMA_STREAM_IRQ		DMA2_Stream0_IRQn
 
-	#define PICKUP_DMA_STREAM	DMA2_Stream6
-	#define PICKUP_DMA_CHANNEL	DMA_Channel_0
-	#define PICKUP_DMA_IRQHandler	DMA2_Stream6_IRQHandler
+	#define PICKUP_DMA_STREAM	DMA2_Stream3
+	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
+	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
 	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
-	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream6_IRQn
+	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
 	#define ADC_SCAN_NUM		3
@@ -161,7 +162,7 @@
 	extern __IO uint16_t* PRESS1_DATA;
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
-	#define PICKUP_BUFFER_SIZE		(32)
+
 	/**
 	 * @}
 	 */

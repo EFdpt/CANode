@@ -62,29 +62,29 @@ void TIMpickup_Config(){
 	TIM_ICInitStruct.TIM_ICSelection=TIM_ICSelection_DirectTI;
 	TIM_ICInitStruct.TIM_ICFilter=0;
 
+	//Enable DMA transfer of counter register
+	TIM_DMAConfig(TIM1,TIM_DMABase_CNT, ENABLE);
+
+	//FIXME WHY TIM_DMA_CC1??
+	TIM_DMACmd(TIM1,TIM_DMA_CC1, ENABLE);
+
 	 /* TODO
-	  * TIM1_DIER: TIE=, TDE=
-	 * configDMA
-	 * configINTERRUPT
 	 * TIM_PrescalerConfig(
 	 * */
-//	TIM_DMA_Cmd(TIMx,TIM_DMA_CCx)
-
-
 	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
 	TIM_TimeBaseStructure.TIM_Period = TIMER_PERIOD;
 	//TIM_TimeBaseStructure.TIM_Prescaler = TIM1_PRESCALER;
 
-//	/* Enable the TIMER global Interrupt */
-//	NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;	//timer1 capture compare interrupt channel
-//	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
-//	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
-//	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
-//	NVIC_Init(&NVIC_InitStructure);
-//
-//	/* TIM Interrupts enable */
-//	TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
+	/* Enable the TIMER global Interrupt */
+	NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;	//timer1 capture compare interrupt channel
+	NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelSubPriority = 0;
+	NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+	NVIC_Init(&NVIC_InitStructure);
+
+	/* TIM Interrupts enable */
+	TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
 
 	TIM_TimeBaseInit(TIMER, &TIM_TimeBaseStructure);
 

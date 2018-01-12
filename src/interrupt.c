@@ -115,6 +115,25 @@ void TIM3_IRQHandler(void){
 }
 
 /**
+ *  @Author Valerio Dodet
+  * @brief  This function handles the interrupt request when the counter of TIM1
+  * runs in overflow. This event means that the wheel doesn't move. Because of the
+  * impossibility to reach an intertime of 0 in a normal condition of movement, the
+  * value 0 is used to represent an unmoving wheel.
+  * @param  None
+  * @retval None
+  */
+//TODO where is the OVR flag for TIM1->CNT?
+void TIM1_CC_IRQHandler(void)
+{
+  if(TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET)
+  {
+    /* Clear TIM1 Capture compare interrupt pending bit */
+    TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
+  }
+}
+
+/**
  * @author	Arella Matteo
  * @brief 	Transmit CAN packet periodically
  * @param	None

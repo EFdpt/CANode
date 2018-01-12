@@ -10,12 +10,12 @@
 
 // define here which board to use
 //#define _FR_DX
-//#define _FR_SX
+#define _FR_SX
 //#define _RT_DX
 //#define _RT_SX
 /* //#define _CRUSCOTTO */
 /* //#define _BATTERIA */
-#define _PEDALI
+//#define _PEDALI
 //#define _COG // include _BATTERIA
 
 //#define _TEST_DOWN
@@ -23,6 +23,7 @@
 
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
+#include "stm32f4xx_tim.h"
 //#include "stm32f4xx_it.h"
 
 #include "model.h"
