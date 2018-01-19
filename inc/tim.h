@@ -1,7 +1,7 @@
 /*
  *  @file 		tim.h
  *  @author		Arella Matteo & Valerio Dodet
- *  @date 		02 Jan 2018
+ *  @date 		19 Jan 2018
  *  @brief		Header for tim.c module
  */
 
@@ -14,15 +14,24 @@
 
 #include "include.h"
 
-#define TIMER					TIM1
+#define TIMER					TIM1	//FIXME TIM1 da utilizzare SOLO per ruote foniche, consiglio di utilizzare sempre la definizione TIM1, TIM2 etc..
 #define OFFSET_TIMER			TIM3
 #define OFFSET_TIMER_CLOCK		RCC_APB1Periph_TIM3
 #define TIMER_IRQCHANNEL		TIM3_IRQn
 #define TIMER_PERIOD			1000				// 1ms
 
+	/*
+	 * @defgroup TIM
+	 * @{
+	 * @brief TIM1_PRESCALER for wheels pickup, at 840Hz (max speed)
+	 * and prescaler value= 2000, the TIM1_CNT value should be 50.
+	 * CK_CNT = 42KHz
+	 * */
 #if defined(_RT_DX)|| defined(_RT_SX)|| defined (_FR_DX)|| defined(_FR_SX)
-	#define TIM1_PRESCALER			((uint16_t) 10000)	//TODO 8.4KHz CK_CNT
+	#define TIM1_PRESCALER			((uint16_t) 2000)
 #endif
+	/*@}
+	 * */
 
 
 #if defined(_PEDALI)
@@ -50,7 +59,7 @@
 	#define OFFSET_TIMER_PRESCALER			((uint16_t) 2000) // 2ms offset
 	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period
 
-#elif defined(_COG)
+#elif defined(_COG) || defined(_TEST_UP)
 
 	#define OFFSET_TIMER_PRESCALER			((uint16_t) 7000) // 7ms offset
 	#define SYSTIMER_PERIOD_PRESCALER		((uint16_t) 10000) // 10ms period

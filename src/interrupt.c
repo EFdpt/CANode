@@ -3,11 +3,11 @@
 #include "dma.h"
 #include "filter.h"
 
-	/*	TODO
-	 * PVD interrupt monitora la tensione di alimentazione
-	 * per proteggere il processore proverei a spegnerlo via software
-	 * e per notificare questa situazione manderei un pacchetto via CAN
-	 * con la tensione critica che è stata rivelata e il nome della scheda*/
+/*	TODO
+ * PVD interrupt monitora la tensione di alimentazione
+ * per proteggere il processore proverei a spegnerlo via software
+ * e per notificare questa situazione manderei un pacchetto via CAN
+ * con la tensione critica che è stata rivelata e il nome della scheda*/
 void PVD_IRQHandler(void){
 
 }
@@ -44,10 +44,12 @@ void CAN2_TX_IRQHandler(void){
 
 
 /**
- * @author	Arella Matteo
+ * @author	Arella Matteo & Valerio Dodet
  * @brief 	Copy data to destination buffer after DMA transfers complete, and filter value
+ * 			The pickup_value is computed immediately.
  * @param	None
  * @retval	None
+ * @update 19 Jan 2018
  */
 void DMA2_IRQHandler(void) {
 
@@ -57,11 +59,25 @@ void DMA2_IRQHandler(void) {
 		copy_to_buffers();
 
 		/* Clear DMA Stream Transfer Complete interrupt pending bit */
-	    DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_FIFO);
+		DMA_ClearITPendingBit(DMA_STREAM, DMA_IT_FIFO);
 
-	    // filter acquired data
-	    filter_data();
+		// filter acquired data
+		filter_data();
 	}
+
+#if defined (_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX)
+
+	if (DMA_GetITStatus(PICKUP_DMA_STREAM, PICKUP_DMA_IT_TRANSF) == SET) {
+		(pickup_buffer_pos<31) ? (pickup_buffer_pos+=1) : (pickup_buffer_pos=0);
+
+		/* Clear DMA Stream Transfer Complete interrupt pending bit */
+		DMA_ClearITPendingBit(PICKUP_DMA_STREAM, DMA_IT_TCIF3);
+
+		// get rpm*40 value of wheel's speed
+		pickup_value = (uint16_t) RPM_CONST/PICKUP_BUFFER_DATA[(pickup_buffer_pos == 0) ? 31 : (pickup_buffer_pos-1)];
+	}
+
+#endif
 }
 
 /**
@@ -116,21 +132,24 @@ void TIM3_IRQHandler(void){
 
 /**
  *  @Author Valerio Dodet
-  * @brief  This function handles the interrupt request when the counter of TIM1
-  * runs in overflow. This event means that the wheel doesn't move. Because of the
-  * impossibility to reach an intertime of 0 in a normal condition of movement, the
-  * value 0 is used to represent an unmoving wheel.
-  * @param  None
-  * @retval None
-  */
-//TODO where is the OVR flag for TIM1->CNT?
+ * @brief  This function handles the interrupt request when the counter of TIM1
+ * runs in overflow. This event means that the wheel doesn't move. Because of the
+ * impossibility to reach an intertime of 0 in a normal condition of movement, the
+ * value 0 is used to represent an unmoving wheel after an OVERFLOW of TIM1_CNT
+ * @param  None
+ * @retval None
+ */
+//TODO where is the OVR flag for TIM1->CNT? then SetCounter=0 and DMA;
 void TIM1_CC_IRQHandler(void)
 {
-  if(TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET)
-  {
-    /* Clear TIM1 Capture compare interrupt pending bit */
-    TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
-  }
+	if(TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET)
+	{
+		//TIM_SetCounter (TIM1, 0);
+		//TODO DMA start for counter=0
+
+		/* Clear TIM1 Capture compare interrupt pending bit */
+		TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
+	}
 }
 
 /**

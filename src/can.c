@@ -78,13 +78,12 @@ void CAN_Config() {
 	 */
 	CAN_FilterInitStructure.CAN_FilterScale = CAN_FilterScale_32bit; //32
 
-	// TODO
+	// TODO CAN_Filter
 	CAN_FilterInitStructure.CAN_FilterIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterIdLow = 0x0000; //0000
 	CAN_FilterInitStructure.CAN_FilterMaskIdHigh = 0x0000;
 	CAN_FilterInitStructure.CAN_FilterMaskIdLow = (uint16_t) VCU_TIME_SLOT; //0000
 
-	// end TODO
 
 	CAN_FilterInitStructure.CAN_FilterFIFOAssignment = CAN_Filter_FIFO0;
 	CAN_FilterInitStructure.CAN_FilterActivation = ENABLE;
@@ -108,7 +107,7 @@ static void CAN_pack_data(CanTxMsg* tx_msg) {
 
 #if defined(_PEDALI) || defined(_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX) || defined(_COG) || defined(_TEST_UP)
 	tx_msg -> ExtId = CAN_ID;
-	tx_msg -> IDE = CAN_Id_Extended;
+	tx_msg -> IDE = CAN_Id_Extended;	//FIXME perché extended? meglio CAN_Id_Standard
 	tx_msg -> RTR = CAN_RTR_DATA;
 #endif
 
@@ -133,21 +132,34 @@ static void CAN_pack_data(CanTxMsg* tx_msg) {
 
 #elif defined(_RT_DX) || defined(_RT_SX)
 
-	tx_msg -> DLC = 2;
+	tx_msg -> DLC = 4;
 	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
+	tx_msg -> Data[2] = (uint8_t)pickup_value>>8;
+	tx_msg -> Data[3] = (uint8_t)pickup_value;
 
 #elif defined(_FR_DX)
 
-	tx_msg -> DLC = 4;
+	tx_msg -> DLC = 6;
 	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
 	((uint16_t*) tx_msg -> Data)[1] = serializes(steer_value);
+	tx_msg -> Data[4] = (uint8_t)pickup_value>>8;
+	tx_msg -> Data[5] = (uint8_t)pickup_value;
 
 #elif defined(_FR_SX)
 
-	tx_msg -> DLC = 6;
-	*((uint16_t*) tx_msg -> Data) = serializes(press1_value);
-	((uint16_t*) tx_msg -> Data)[1] = serializes(press2_value);
-	((uint16_t*) tx_msg -> Data)[2] = serializes(susp_value);
+//	TODO press_value
+//	TODO susp_value
+	tx_msg -> DLC = 8;
+
+	tx_msg -> Data[0] = (uint8_t)press1_value>>8;
+	tx_msg -> Data[1] =(uint8_t)press1_value;
+	tx_msg -> Data[2] =(uint8_t)press2_value >>8;
+	tx_msg -> Data[3] =(uint8_t)press2_value;
+	tx_msg -> Data[4] = (uint8_t)susp_value>>8;
+	tx_msg -> Data[5] = (uint8_t) susp_value;
+	tx_msg -> Data[6] = (uint8_t)pickup_value>>8;
+	tx_msg -> Data[7] = (uint8_t)pickup_value;
+
 
 
 #elif defined(_COG) || defined(_TEST_UP)

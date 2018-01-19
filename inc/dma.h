@@ -81,7 +81,7 @@
 	#define PICKUP_DMA_STREAM	DMA2_Stream3
 	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
 	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
-	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+#define PICKUP_DMA_IT_TRANSF		DMA_IT_TCIF3
 	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -95,6 +95,7 @@
 	 * @{
 	 */
 	extern __IO uint16_t* SUSP_DATA;
+	extern __IO uint16_t* PICKUP_BUFFER_DATA;
 
 	/**
 	 * @}
@@ -113,7 +114,7 @@
 	#define PICKUP_DMA_STREAM	DMA2_Stream3
 	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
 	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
-	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+#define PICKUP_DMA_IT_TRANSF		DMA_IT_TCIF3
 	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -128,6 +129,7 @@
 	 */
 	extern __IO uint16_t* SUSP_DATA;
 	extern __IO uint16_t* STEER_DATA;
+	extern __IO uint16_t* PICKUP_BUFFER_DATA;
 
 	/**
 	 * @}
@@ -146,7 +148,7 @@
 	#define PICKUP_DMA_STREAM	DMA2_Stream3
 	#define PICKUP_DMA_CHANNEL	DMA_Channel_6
 	#define PICKUP_DMA_IRQHandler	DMA2_Stream3_IRQHandler
-	#define PICKUP_DMA_IT_FIFO		DMA_IT_TCIF0
+	#define PICKUP_DMA_IT_TRANSF		DMA_IT_TCIF3
 	#define PICKUP_DMA_STREAM_IRQ	DMA2_Stream3_IRQn
 
 	#define ADC_SOURCE			ADC1
@@ -162,6 +164,7 @@
 	extern __IO uint16_t* PRESS1_DATA;
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
+	extern __IO uint16_t* PICKUP_BUFFER_DATA;
 
 	/**
 	 * @}
@@ -212,6 +215,12 @@
 	 * 			(instead of buffer[x] use buffer[pos(x)])
 	 */
 	#define pos(x, offset)			((x) * offset)
+
+	/**
+	 * @brief Take count of PICKUP_BUFFER_DATA last writing position
+	 * @value [0-31]
+	 */
+	extern __IO uint8_t pickup_buffer_pos;
 
 	/**
 	 * @}

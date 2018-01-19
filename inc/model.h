@@ -29,6 +29,27 @@ extern void model_calibrate_bounds();
 
 extern void model_check_plausibility();
 
+/*@defgroup MAGIC_NUMBERS
+ *@{
+ *@brief To calculate RPM from TIM1_CNT at CK_CNT=42MHz the formula is
+ *       1/(32*(TIM1_CNT/(CK_CNT*60))). In order to send the data in 16bit of
+ *       a CAN frame we have to represent it in uint16_t format.
+ *       When the wheel (of 20" rolling radius) is about at 5Km/h it has a rpm
+ *       value higher then 50 that explicit in Hz of pickup sensor is higher then 25.
+ *       So the TIM1_CNT at 5Km/h on every risingEdge count up to 1500.
+ *       if CK_CNT = 42MHz
+ *       	1 / (32 * (TIM1_CNT / (CK_CNT * 60))) = 78750 / TIM1_CNT
+ *@attention
+ *			to represent better resolution this number is multiplied by 40
+ *       	78750 * 40 / TIM1_CNT = 3150000 / TIM1_CNT
+ *       	with the multiplying by 40 a speed greater then 150Km/h will be represent as 63000[rpm*40]
+ *       	to obtain real rpm value DIVIDE the calculated pickup_value by 40
+ **/
+#if defined (_RT_DX) || defined(_RT_SX)|| defined (_FR_DX)|| defined(_FR_SX)
+#define RPM_CONST	3150000	//78750 * 40
+#endif
+/*@}*/
+
 #if defined(_PEDALI)
 
 	#define RunTH 			25

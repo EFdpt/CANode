@@ -19,7 +19,7 @@ void Offset_Config() {
 
 	TIM_TimeBaseStructure.TIM_Prescaler = OFFSET_TIMER_PRESCALER - 1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;      //can be TIM_CounterMode_Up or TIM_CounterMode_Down
-	TIM_TimeBaseStructure.TIM_Period = TIMER_PERIOD - 1;          //set the period
+	TIM_TimeBaseStructure.TIM_Period = TIMER_PERIOD - 1;          //set the period FIXME sicuuuro?
 	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_RepetitionCounter = 0;      //counter runs in repetition
 
@@ -47,6 +47,8 @@ void Offset_Config() {
  *
  * */
 void TIMpickup_Config(){
+#if defined (_RT_DX) || defined(_RT_SX) || defined(_FR_DX) || defined(_FR_SX)
+
 	NVIC_InitTypeDef NVIC_InitStructure;
 	TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure = {0};
 	TIM_ICInitTypeDef TIM_ICInitStruct;
@@ -63,18 +65,23 @@ void TIMpickup_Config(){
 	TIM_ICInitStruct.TIM_ICFilter=0;
 
 	//Enable DMA transfer of counter register
-	TIM_DMAConfig(TIM1,TIM_DMABase_CNT, ENABLE);
+	TIM_DMAConfig(TIM1,TIM_DMABase_CNT,TIM_DMABurstLength_1Transfer);
 
 	//FIXME WHY TIM_DMA_CC1??
 	TIM_DMACmd(TIM1,TIM_DMA_CC1, ENABLE);
 
-	 /* TODO
-	 * TIM_PrescalerConfig(
+	 /* @defgroup TIM1_BASE_STRUCTURE
+	  * @{
+	  * @brief counterMode_Up,
 	 * */
-	TIM_TimeBaseStructure.TIM_ClockDivision = 0;
+	TIM_TimeBaseStructure.TIM_ClockDivision = TIM_CKD_DIV1;
 	TIM_TimeBaseStructure.TIM_CounterMode = TIM_CounterMode_Up;
-	TIM_TimeBaseStructure.TIM_Period = TIMER_PERIOD;
-	//TIM_TimeBaseStructure.TIM_Prescaler = TIM1_PRESCALER;
+	TIM_TimeBaseStructure.TIM_Period = 0xffff; //this should be ignored because of the default disabled Auto-Reload
+	TIM_TimeBaseStructure.TIM_Prescaler = TIM1_PRESCALER;
+
+	/*
+	 * @}
+	 * */
 
 	/* Enable the TIMER global Interrupt */
 	NVIC_InitStructure.NVIC_IRQChannel = TIM1_CC_IRQn;	//timer1 capture compare interrupt channel
@@ -86,7 +93,7 @@ void TIMpickup_Config(){
 	/* TIM Interrupts enable */
 	TIM_ITConfig(TIM1, TIM_IT_CC1, ENABLE);
 
-	TIM_TimeBaseInit(TIMER, &TIM_TimeBaseStructure);
+	TIM_TimeBaseInit(TIM1, &TIM_TimeBaseStructure);
 
 	TIM_ICInit(TIM1, &TIM_ICInitStruct);
 
@@ -96,6 +103,7 @@ void TIMpickup_Config(){
 
 	/* TIM enable counter */
 	TIM_Cmd(TIM1, ENABLE);
+#endif
 }
 
 inline void TIM_start(TIM_TypeDef* timer) {
