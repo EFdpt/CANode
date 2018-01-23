@@ -164,7 +164,7 @@
 	extern __IO uint16_t* PRESS1_DATA;
 	extern __IO uint16_t* PRESS2_DATA;
 	extern __IO uint16_t* SUSP_DATA;
-	extern __IO uint16_t* PICKUP_BUFFER_DATA;
+	extern __IO uint16_t PICKUP_BUFFER_DATA[];
 
 	/**
 	 * @}

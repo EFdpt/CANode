@@ -42,10 +42,10 @@ volatile static status_t current_status;
 
 #elif defined(_FR_SX)
 
-	press1_value = 0;
-	press2_value = 0;
-	susp_value = 0;
-	pickup_value = 0;
+	__IO uint16_t press1_value = 0;
+	__IO uint16_t press2_value = 0;
+	__IO uint16_t susp_value = 0;
+	__IO uint16_t pickup_value = 0;
 
 #elif defined(_COG) || defined(_TEST_UP)
 

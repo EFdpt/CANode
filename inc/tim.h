@@ -28,7 +28,8 @@
 	 * CK_CNT = 42KHz
 	 * */
 #if defined(_RT_DX)|| defined(_RT_SX)|| defined (_FR_DX)|| defined(_FR_SX)
-	#define TIM1_PRESCALER			((uint16_t) 2000)
+	#define TIM1_PRESCALER		((uint16_t) 2000)
+	#define TIM1_PERIOD16b		0xffff
 #endif
 	/*@}
 	 * */

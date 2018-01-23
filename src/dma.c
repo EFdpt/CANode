@@ -44,7 +44,7 @@ __IO uint16_t* GYRO_DATA = DEST_BUFFER + 3;
 #if defined(_RT_DX) || defined(_RT_SX) || defined (_FR_DX) || defined (_FR_SX)
 
 __IO uint16_t* SUSP_DATA = DEST_BUFFER;
-__IO uint16_t PICKUP_BUFFER_DATA[PICKUP_BUFFER_SIZE] = {0};	//conflicting types
+__IO uint16_t PICKUP_BUFFER_DATA[PICKUP_BUFFER_SIZE] = {0};
 #endif
 
 #if defined(_FR_DX)
