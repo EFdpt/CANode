@@ -9,18 +9,27 @@
 #define INCLUDE_H_
 
 // define here which board to use
+/**
+ *  @defgroup CANode_selection
+ *   @{
+ *	   @code
+ */
 //#define _FR_DX
-#define _FR_SX
+//#define _FR_SX
 //#define _RT_DX
 //#define _RT_SX
 /* //#define _CRUSCOTTO */
 /* //#define _BATTERIA */
-//#define _PEDALI
+#define _PEDALI
 //#define _COG // include _BATTERIA
 
 //#define _TEST_DOWN
 //#define _TEST_UP
 
+/**
+ * 	   @endcode
+ *  @}
+ */
 #include "stm32f4xx_conf.h"
 #include "stm32f4xx.h"
 #include "stm32f4xx_tim.h"

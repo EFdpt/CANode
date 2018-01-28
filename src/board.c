@@ -475,5 +475,6 @@ void Init_Board(){
 	CAN_Config();
 	ADC_Config();
 	DMA_Config();
+	Offset_Config();
 }
 
