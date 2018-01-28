@@ -133,22 +133,21 @@ void TIM3_IRQHandler(void){
 /**
  *  @Author Valerio Dodet
  * @brief  This function handles the interrupt request when the counter of TIM1
- * runs in overflow. This event means that the wheel doesn't move. Because of the
- * impossibility to reach an intertime of 0 in a normal condition of movement, the
- * value 0 is used to represent an unmoving wheel after an OVERFLOW of TIM1_CNT
+ * runs out of the autoreload value. This event means that the wheel doesn't move.
+ * The auto reload value should be used for the actual value of the wheel rpm BUT the
+ * immediately next rising edge of the TIM1_IC has to be ignored by the DMA
  * @param  None
  * @retval None
  */
-//TODO where is the OVR flag for TIM1->CNT? then SetCounter=0 and DMA;
-void TIM1_CC_IRQHandler(void)
+//TODO in slave mode reset the update event triggers the DMA. How can we recognise the OVR? T_T
+void TIM1_IRQHandler(void)
 {
-	if(TIM_GetITStatus(TIM1, TIM_IT_CC1) == SET)
+	if(TIM_GetITStatus(TIM1, TIM_IT_Update) == SET)
 	{
-		//TIM_SetCounter (TIM1, 0);
 		//TODO DMA start for counter=0
 
 		/* Clear TIM1 Capture compare interrupt pending bit */
-		TIM_ClearITPendingBit(TIM1, TIM_IT_CC2);
+		TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
 	}
 }
 

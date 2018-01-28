@@ -134,16 +134,14 @@ static void CAN_pack_data(CanTxMsg* tx_msg) {
 
 	tx_msg -> DLC = 4;
 	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
-	tx_msg -> Data[2] = (uint8_t)pickup_value>>8;
-	tx_msg -> Data[3] = (uint8_t)pickup_value;
+	((uint16_t*) tx_msg -> Data)[1] = serializes(pickup_value);
 
 #elif defined(_FR_DX)
 
 	tx_msg -> DLC = 6;
 	*((uint16_t*) tx_msg -> Data) = serializes(susp_value);
 	((uint16_t*) tx_msg -> Data)[1] = serializes(steer_value);
-	tx_msg -> Data[4] = (uint8_t)pickup_value>>8;
-	tx_msg -> Data[5] = (uint8_t)pickup_value;
+	((uint16_t*) tx_msg -> Data)[2] = serializes(pickup_value);
 
 #elif defined(_FR_SX)
 
@@ -151,14 +149,11 @@ static void CAN_pack_data(CanTxMsg* tx_msg) {
 //	TODO susp_value
 	tx_msg -> DLC = 8;
 
-	tx_msg -> Data[0] = (uint8_t)press1_value>>8;
-	tx_msg -> Data[1] =(uint8_t)press1_value;
-	tx_msg -> Data[2] =(uint8_t)press2_value >>8;
-	tx_msg -> Data[3] =(uint8_t)press2_value;
-	tx_msg -> Data[4] = (uint8_t)susp_value>>8;
-	tx_msg -> Data[5] = (uint8_t) susp_value;
-	tx_msg -> Data[6] = (uint8_t)pickup_value>>8;
-	tx_msg -> Data[7] = (uint8_t)pickup_value;
+	*((uint16_t*) tx_msg -> Data) = serializes(press1_value);
+	((uint16_t*) tx_msg -> Data)[1] = serializes(press2_value);
+	((uint16_t*) tx_msg -> Data)[2] = serializes(susp_value);
+	((uint16_t*) tx_msg -> Data)[3] = serializes(pickup_value);
+
 
 
 
